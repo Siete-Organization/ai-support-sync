@@ -552,28 +552,27 @@ td code { white-space: nowrap; }
     <!-- 11 -->
     <section id="estado">
       <h2><span class="num">11</span>Estado y pendientes</h2>
-      <p>Al 15/10/2026, 15:00 (Lima).</p>
+      <p>Al 15/10/2026, 15:30 (Lima).</p>
       <div class="table-wrap"><table>
         <thead><tr><th>Pieza</th><th>Estado</th><th>Detalle</th></tr></thead>
         <tbody id="tabla-estado">
           <tr><td>siete-soporte</td><td><span class="badge ok">En producción</span></td><td>Con el widget v3. La IA espera su clave: hoy responde en modo sin asistente.</td></tr>
-          <tr><td>PM Tech · Soporte apps</td><td><span class="badge ok">En producción</span></td><td>Conectar app, reportes, panel por usuario, líderes y avisos. El asistente de instalación pasa al v3 con el PR #2.</td></tr>
-          <tr><td>Marketing AI</td><td><span class="badge ok">En uso</span></td><td>Conectada desde el 14/10, con su manual y la prueba de punta a punta ok (SOP-1). Sus reportes le llegan a Jaime. La cara de Siete llega con el PR #201.</td></tr>
-          <tr><td>AISDR</td><td><span class="badge off">Pendiente de decisión</span></td><td>El código está listo (PR #242). Para conectarla falta decidir a qué proyecto de PM Tech se vincula ("AI SDR" está culminado y "Conectar app" sólo ofrece proyectos activos) y quién recibe sus reportes.</td></tr>
-          <tr><td>Outply</td><td><span class="badge wait">Conectándose</span></td><td>Conectada en PM Tech el 15/10 (proyecto "Soporte - Outply", responsable Jaime). Falta mergear el PR #131, pegar su clave en el servicio <code>outply-api</code> y redesplegar.</td></tr>
+          <tr><td>PM Tech · Soporte apps</td><td><span class="badge ok">En producción</span></td><td>Conectar app, reportes, panel por usuario, líderes y avisos. Desde el 15/10 el asistente de instalación entrega el widget v3 (PR #2).</td></tr>
+          <tr><td>Marketing AI</td><td><span class="badge ok">En uso</span></td><td>Conectada desde el 14/10, con su manual y la prueba de punta a punta ok (SOP-1). Sus reportes le llegan a Jaime. Desde el 15/10 muestra la cara de Siete (PR #201).</td></tr>
+          <tr><td>AISDR</td><td><span class="badge off">Pendiente de decisión</span></td><td>Su cambio ya está publicado (PR #242, 15/10) y no se ve hasta conectarla. Para conectarla falta decidir a qué proyecto de PM Tech se vincula ("AI SDR" está culminado y "Conectar app" sólo ofrece proyectos activos) y quién recibe sus reportes.</td></tr>
+          <tr><td>Outply</td><td><span class="badge wait">Conectándose</span></td><td>Conectada en PM Tech el 15/10 (proyecto "Soporte - Outply", responsable Jaime) y con su clave ya cargada en el servicio <code>outply-api</code>. El PR #131 se mergea después de las 17:00 (Lima), el horario en que se despliega Outply; después se sube su manual.</td></tr>
           <tr><td>Response Manager (con UniBox)</td><td><span class="badge wait">Espera aprobación</span></td><td>PR #123, ya con el v3. Espera el visto bueno de quien lleva la verificación de Google (CASA).</td></tr>
         </tbody>
       </table></div>
       <h3>Pendientes, en orden</h3>
       <ol id="pendientes">
-        <li>Mergear los PRs #131 (Outply), #201 (Marketing AI), #2 (PM) y #242 (AISDR; no cambia nada visible hasta conectarla).</li>
-        <li>Outply: pegar su clave en <code>outply-api</code>, redesplegar y subir su manual (<code>manuales/outply.md</code>) desde Apps.</li>
+        <li>Outply, después de las 17:00 (Lima): mergear el PR #131 (eso la despliega), subir su manual (<code>manuales/outply.md</code>) desde Apps → Cargar manual y comprobar que aparezca la cara de Siete.</li>
         <li>Cargar <code>ANTHROPIC_API_KEY</code> en siete-soporte y redesplegar.</li>
         <li>AISDR: decidir su proyecto y su responsable, y conectarla como Outply (manual: <code>manuales/aisdr.md</code>).</li>
         <li>En Coolify, poner las claves como "Not available during build" (sección 6).</li>
         <li>Response Manager, con el OK de CASA.</li>
       </ol>
-      <div class="note"><strong>Arreglos menores pendientes:</strong> en el PM, un test de vencimientos falla si el CI corre entre las 00:00 y las 05:00 UTC (compara la fecha del runner con la de la empresa), y el job "dependencias" marca avisos de librerías del frontend. Ninguno afecta a producción. El detalle está en <code>docs/bugs-encontrados.md</code>.</div>
+      <div class="note"><strong>Arreglos menores pendientes:</strong> en el PM, un test de vencimientos falla si el CI corre entre las 00:00 y las 05:00 UTC (compara la fecha del runner con la de la empresa), y el job "dependencias" marca avisos de librerías del frontend; ninguno de los dos afecta a producción. Además, una vez el panel de Conectar app se cerró solo antes de terminar: si te pasa antes de copiar la clave, rótala desde Apps. El detalle está en <code>docs/bugs-encontrados.md</code>.</div>
     </section>
 
     <!-- 12 -->
@@ -587,7 +586,7 @@ td code { white-space: nowrap; }
           <tr><td>Las apps</td><td>Repos <code>AI-SDR</code>, <code>reply_v2</code> (Outply), <code>marketing-ai-engine</code> y <code>SDR-Response-Manager</code>.</td></tr>
           <tr><td>La historia y las decisiones</td><td><code>siete-soporte/HANDOFF_integracion_pm_2026-09-30.md</code>.</td></tr>
           <tr><td>Cómo integrar una app, en detalle</td><td><code>siete-soporte/docs/integracion-apps.md</code> y <code>docs/integracion/&lt;app&gt;.md</code>.</td></tr>
-          <tr><td>Los hallazgos (48) y su estado</td><td><code>siete-soporte/docs/bugs-encontrados.md</code>.</td></tr>
+          <tr><td>Los hallazgos (49) y su estado</td><td><code>siete-soporte/docs/bugs-encontrados.md</code>.</td></tr>
           <tr><td>Los manuales técnicos</td><td><code>siete-soporte/manuales/</code>.</td></tr>
           <tr><td>El proyecto en PM Tech</td><td>Proyectos → AI Support Sync (la tarea "Terminar la implementación" tiene el checklist).</td></tr>
           <tr><td>Presentación para el equipo</td><td><a href="./">La página de AI Support Sync</a>.</td></tr>
