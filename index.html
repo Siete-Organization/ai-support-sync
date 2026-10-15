@@ -368,6 +368,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <a href="#practicas">Buenas prácticas</a>
       <a href="#onboarding">Onboarding</a>
       <a href="#entrega">Entrega</a>
+      <a href="manual.html">Manual</a>
     </nav>
     <button class="theme-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -385,12 +386,13 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <div class="hero-cta">
         <a class="btn btn-primary" href="#entrega">Ver qué falta para activarlo</a>
         <a class="btn btn-ghost" href="#onboarding">Cómo se usa, por rol</a>
+        <a class="btn btn-ghost" href="manual.html">Manual completo</a>
       </div>
       <div class="stats">
         <div class="stat"><b>4</b><span>apps internas con la integración lista</span></div>
         <div class="stat"><b>1</b><span>lugar para ver todos los reportes: PM Tech</span></div>
         <div class="stat"><b>~15 min</b><span>para sumar el chat a una app nueva</span></div>
-        <div class="stat"><b>47</b><span>hallazgos documentados en el camino</span></div>
+        <div class="stat"><b>48</b><span>hallazgos documentados en el camino</span></div>
       </div>
     </div>
   </div>
@@ -732,9 +734,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <div class="status-list">
         <div class="status-row"><div><h3>siete-soporte</h3><p>Desplegado, conectado a PM Tech y en uso. Falta la clave de Anthropic para que responda la IA; mientras tanto, todo se convierte en reporte.</p></div><span class="badge ok">En producción</span></div>
         <div class="status-row"><div><h3>PM Tech · Soporte apps</h3><p>En producción con Conectar app, tickets SOP-n, avisos por email y el panel por usuario.</p></div><span class="badge ok">En producción</span></div>
-        <div class="status-row"><div><h3>Marketing AI</h3><p>Conectada: el chat está en uso y la primera prueba de punta a punta salió bien (SOP-1). La cara de Siete llega al publicar el widget v3.</p></div><span class="badge ok">En uso</span></div>
+        <div class="status-row"><div><h3>Marketing AI</h3><p>Conectada: el chat está en uso y la primera prueba de punta a punta salió bien (SOP-1). Sus reportes le llegan a Jaime. La cara de Siete llega al publicar el widget v3.</p></div><span class="badge ok">En uso</span></div>
         <div class="status-row"><div><h3>Response Manager (con UniBox)</h3><p>Cambios listos, ya con el widget v3. Esperan el visto bueno de quien lleva la verificación de Google (CASA), porque la app lee Gmail.</p></div><span class="badge wait">Espera aprobación</span></div>
-        <div class="status-row"><div><h3>AISDR y Outply</h3><p>Cambios listos sobre su versión de hoy, con el widget v3 y el CI en verde. Falta publicarlos y conectarlos desde PM Tech.</p></div><span class="badge wait">Listos para activar</span></div>
+        <div class="status-row"><div><h3>Outply</h3><p>Conectada en PM Tech el 15/10; sus reportes le llegan a Jaime. Falta publicar su cambio y pegar su clave.</p></div><span class="badge wait">Conectándose</span></div>
+        <div class="status-row"><div><h3>AISDR</h3><p>El cambio está listo. Falta decidir a qué proyecto de PM Tech se vincula y quién recibe sus reportes.</p></div><span class="badge off">Pendiente de decisión</span></div>
         <div class="status-row"><div><h3>Manuales técnicos de las 4 apps</h3><p>Escritos. Se cargan al conectar cada app; el de Marketing AI ya está cargado.</p></div><span class="badge ok">Listos</span></div>
       </div>
 
@@ -748,7 +751,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <li class="check"><input type="checkbox" id="c4"><label for="c4"><h3>4. Activar la IA <span class="who">15/10</span></h3><p>Cargar la clave de Anthropic en siete-soporte. Mientras tanto el chat funciona sin asistente: todo se convierte en reporte.</p></label></li>
         <li class="check"><input type="checkbox" id="c5"><label for="c5"><h3>5. Conectar Marketing AI <span class="who">hecho el 14/10</span></h3><p>Conectar app con el identificador <code>marketing-ai</code>, pegar su clave en el backend de Marketing AI, subir su manual y redesplegar.</p></label></li>
         <li class="check"><input type="checkbox" id="c6"><label for="c6"><h3>6. Líder de soporte y prueba de punta a punta <span class="who">hecho el 14/10</span></h3><p>Elegir a César Granda como líder en Soporte apps. Hacer un reporte de prueba desde Marketing AI: tiene que aparecer como SOP-1, con responsable y plazo, y llegar el email.</p></label></li>
-        <li class="check"><input type="checkbox" id="c7"><label for="c7"><h3>7. Las otras tres apps <span class="who">15/10 · RM con CASA</span></h3><p>AISDR y Outply: publicar sus cambios, Conectar app con <code>aisdr</code> y <code>outply</code>, pegar su clave y subir su manual (mismo procedimiento que el paso 5). Response Manager, con el visto bueno de CASA.</p></label></li>
+        <li class="check"><input type="checkbox" id="c7"><label for="c7"><h3>7. Las otras tres apps <span class="who">Outply 15/10 · AISDR y RM, a decidir</span></h3><p>Outply: conectada; falta publicar su cambio y pegar su clave. AISDR: decidir su proyecto y su responsable, y conectarla igual. Response Manager, con el visto bueno de CASA. El paso a paso está en el <a href="manual.html#conectar">manual</a>.</p></label></li>
       </ul>
 
       <h2 style="margin-top:56px">Preguntas frecuentes</h2>
@@ -764,7 +767,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
       <h2 style="margin-top:56px">Dónde está todo</h2>
       <div class="links">
-        <div class="card"><h3>Código</h3><p>Repositorios privados de Siete en GitHub: <code>siete-soporte</code> (servicio, widget y manuales) y <code>project-manager-tech</code> (Soporte apps). Cada app tiene su rama del widget.</p></div>
+        <div class="card"><h3>Manual</h3><p>El <a href="manual.html">manual de AI Support Sync</a>: cómo funciona, uso por rol, conectar una app, configuración, operación y solución de problemas.</p></div>
+        <div class="card"><h3>Código</h3><p>Repositorios privados de Siete en GitHub: <code>siete-soporte</code> (servicio, widget y manuales) y <code>project-manager-tech</code> (Soporte apps). Los cambios de cada app están en su repo.</p></div>
         <div class="card"><h3>Documentación interna</h3><p>El documento "AI Support Sync" (para el equipo) tiene el detalle de cada paso, la operación y qué hacer si algo falla. En el repo: el handoff, la guía de integración y los hallazgos.</p></div>
         <div class="card"><h3>En PM Tech</h3><p>El proyecto "AI Support Sync" tiene la tarea "Terminar la implementación" con este mismo checklist. Los reportes viven en Soporte apps.</p></div>
       </div>

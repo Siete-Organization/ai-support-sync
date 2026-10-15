@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manual de AI Support Sync</title>
+<meta name="description" content="Manual de uso y operación de AI Support Sync, el chat de soporte de las apps internas de Siete: cómo funciona, cómo se usa por rol, cómo conectar una app, configuración, operación y solución de problemas.">
+<meta property="og:title" content="Manual de AI Support Sync · Siete">
+<meta property="og:description" content="Todo lo que necesita quien queda a cargo del chat de soporte de las apps de Siete.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%235b5bd6'/%3E%3Cellipse cx='7.2' cy='9.2' rx='1.7' ry='2.2' fill='white'/%3E%3Cellipse cx='16.8' cy='9.2' rx='1.7' ry='2.2' fill='white'/%3E%3Cpath d='M10.6 11.6H13.8L11.7 15.6M8.2 17.6Q12 20.5 15.8 17.6' fill='none' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f7fb;
+  --surface: #ffffff;
+  --surface-2: #f0f0f7;
+  --text: #1b1b29;
+  --muted: #5d5d73;
+  --line: #e3e3ee;
+  --accent: #5b5bd6;
+  --accent-soft: #ececfd;
+  --accent-text: #3e3eb8;
+  --on-accent: #ffffff;
+  --ok: #1f8a5b;
+  --ok-soft: #e3f5ec;
+  --warn: #b26a00;
+  --warn-soft: #fdf1dc;
+  --bad: #c2413b;
+  --bad-soft: #fbe7e6;
+  --shadow: 0 1px 2px rgba(20, 20, 50, .05), 0 8px 24px rgba(20, 20, 50, .06);
+  --radius: 14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111118;
+    --surface: #1a1a24;
+    --surface-2: #222230;
+    --text: #ececf4;
+    --muted: #a4a4bb;
+    --line: #2e2e3e;
+    --accent: #8b8bf0;
+    --accent-soft: #26264a;
+    --accent-text: #b4b4ff;
+    --on-accent: #14142e;
+    --ok: #4cc38a;
+    --ok-soft: #173326;
+    --warn: #f0b048;
+    --warn-soft: #3a2c12;
+    --bad: #f07a73;
+    --bad-soft: #3b1d1b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111118;
+  --surface: #1a1a24;
+  --surface-2: #222230;
+  --text: #ececf4;
+  --muted: #a4a4bb;
+  --line: #2e2e3e;
+  --accent: #8b8bf0;
+  --accent-soft: #26264a;
+  --accent-text: #b4b4ff;
+  --on-accent: #14142e;
+  --ok: #4cc38a;
+  --ok-soft: #173326;
+  --warn: #f0b048;
+  --warn-soft: #3a2c12;
+  --bad: #f07a73;
+  --bad-soft: #3b1d1b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-text); }
+code, kbd {
+  font: .86em/1.4 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .1em .4em;
+  overflow-wrap: anywhere;
+}
+pre {
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+  font: .84rem/1.55 ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+pre code { background: none; border: 0; padding: 0; font: inherit; }
+h1, h2, h3 { line-height: 1.22; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+h2 { font-size: clamp(1.4rem, 2.6vw, 1.8rem); font-weight: 800; }
+h3 { font-size: 1.05rem; font-weight: 700; margin-top: 26px; }
+p { margin: 10px 0 0; }
+ul, ol { margin: 10px 0 0; padding-left: 22px; }
+li { margin: 4px 0; }
+strong { font-weight: 700; }
+
+/* Barra superior */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .in { max-width: 1240px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); display: flex; align-items: center; gap: 14px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; text-decoration: none; color: var(--text); white-space: nowrap; min-width: 0; }
+.brand span.t { overflow: hidden; text-overflow: ellipsis; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; flex: none; }
+.top .links { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.top .links a { color: var(--muted); text-decoration: none; font-size: .9rem; font-weight: 600; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+.top .links a:hover { color: var(--text); background: var(--surface-2); }
+.theme-btn {
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  width: 36px; height: 36px; border-radius: 10px; cursor: pointer; flex: none;
+  display: grid; place-items: center;
+}
+@media (max-width: 560px) { .top .links a.opt { display: none; } }
+
+/* Esqueleto: índice + contenido */
+.layout { max-width: 1240px; margin: 0 auto; padding: 28px max(16px, env(safe-area-inset-left, 0px)) 80px; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; }
+.toc { position: sticky; top: 84px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; font-size: .9rem; }
+.toc b { display: block; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.toc li { margin: 0; }
+.toc a { display: block; padding: 5px 10px; border-radius: 8px; color: var(--muted); text-decoration: none; font-weight: 600; border-left: 2px solid transparent; }
+.toc a:hover { color: var(--text); background: var(--surface-2); }
+.toc a.on { color: var(--accent-text); background: var(--accent-soft); }
+.toc-mobile { display: none; }
+@media (max-width: 920px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 18px; }
+  .toc { display: none; }
+  .toc-mobile { display: block; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .toc-mobile summary { cursor: pointer; padding: 12px 14px; font-weight: 700; }
+  .toc-mobile ol { margin: 0 0 12px; }
+  .toc-mobile a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+}
+main { min-width: 0; }
+.doc-head { padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.doc-head .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.chip.acc { background: var(--accent-soft); color: var(--accent-text); border-color: transparent; }
+.lead { font-size: 1.08rem; color: var(--muted); margin-top: 12px; max-width: 70ch; }
+section { padding: 36px 0 6px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+section > p, section > ul, section > ol { max-width: 75ch; }
+.num { color: var(--accent-text); margin-right: 8px; }
+
+/* Tarjetas, avisos y tablas */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
+.card h3 { margin-top: 0; }
+.card p { color: var(--muted); font-size: .93rem; margin-top: 6px; }
+.note { margin-top: 16px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: .94rem; max-width: 75ch; }
+.note.ok { background: var(--ok-soft); border-color: transparent; }
+.note.warn { background: var(--warn-soft); border-color: transparent; }
+.note strong:first-child { margin-right: 4px; }
+.table-wrap { margin-top: 14px; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+.badge { display: inline-block; font-size: .76rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.wait { background: var(--warn-soft); color: var(--warn); }
+.badge.off { background: var(--surface-2); color: var(--muted); }
+
+/* Flujo */
+.flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+.step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+.step .n { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-weight: 800; font-size: .85rem; }
+.step h3 { margin-top: 10px; font-size: .98rem; }
+.step p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
+@media (max-width: 860px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.steps { counter-reset: p; list-style: none; padding: 0; margin-top: 14px; max-width: 75ch; }
+.steps > li { counter-increment: p; position: relative; padding: 0 0 14px 40px; margin: 0; }
+.steps > li::before { content: counter(p); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); display: grid; place-items: center; font-weight: 800; font-size: .85rem; }
+.steps > li > strong { display: block; }
+.steps > li > span { color: var(--muted); display: block; font-size: .94rem; }
+
+/* La cara */
+.cara { display: flex; gap: 16px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.cara .bola { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; flex: none; box-shadow: 0 8px 22px rgba(0,0,0,.16); }
+.cara p { margin: 0; flex: 1 1 260px; color: var(--muted); }
+
+.foot { margin-top: 40px; color: var(--muted); font-size: .88rem; }
+@media print {
+  .top, .toc, .toc-mobile, .theme-btn { display: none !important; }
+  .layout { display: block; padding: 0; }
+  section { break-inside: avoid-page; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <a class="brand" href="#inicio">
+      <span class="brand-mark"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="7.2" cy="9.2" rx="1.7" ry="2.2" fill="currentColor"/><ellipse cx="16.8" cy="9.2" rx="1.7" ry="2.2" fill="currentColor"/><path d="M10.6 11.6H13.8L11.7 15.6M8.2 17.6Q12 20.5 15.8 17.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="t">Manual de AI Support Sync</span>
+    </a>
+    <nav class="links" aria-label="Sitio">
+      <a class="opt" href="./">Presentación</a>
+      <a href="#estado">Estado</a>
+    </nav>
+    <button class="theme-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice">
+    <b>Contenido</b>
+    <ol id="toc-list">
+      <li><a href="#resumen">1. En un minuto</a></li>
+      <li><a href="#funciona">2. Cómo funciona</a></li>
+      <li><a href="#roles">3. Uso diario, por rol</a></li>
+      <li><a href="#conectar">4. Conectar una app</a></li>
+      <li><a href="#manual">5. El manual técnico</a></li>
+      <li><a href="#config">6. Configuración</a></li>
+      <li><a href="#operar">7. Operación</a></li>
+      <li><a href="#widget">8. El widget y sus versiones</a></li>
+      <li><a href="#seguridad">9. Seguridad</a></li>
+      <li><a href="#problemas">10. Solución de problemas</a></li>
+      <li><a href="#estado">11. Estado y pendientes</a></li>
+      <li><a href="#donde">12. Dónde está todo</a></li>
+      <li><a href="#glosario">13. Glosario</a></li>
+    </ol>
+  </nav>
+
+  <main id="inicio">
+    <details class="toc-mobile">
+      <summary>Contenido</summary>
+      <ol>
+        <li><a href="#resumen">En un minuto</a></li>
+        <li><a href="#funciona">Cómo funciona</a></li>
+        <li><a href="#roles">Uso diario, por rol</a></li>
+        <li><a href="#conectar">Conectar una app</a></li>
+        <li><a href="#manual">El manual técnico</a></li>
+        <li><a href="#config">Configuración</a></li>
+        <li><a href="#operar">Operación</a></li>
+        <li><a href="#widget">El widget y sus versiones</a></li>
+        <li><a href="#seguridad">Seguridad</a></li>
+        <li><a href="#problemas">Solución de problemas</a></li>
+        <li><a href="#estado">Estado y pendientes</a></li>
+        <li><a href="#donde">Dónde está todo</a></li>
+        <li><a href="#glosario">Glosario</a></li>
+      </ol>
+    </details>
+
+    <div class="doc-head">
+      <h1>Manual de AI Support Sync</h1>
+      <p class="lead">Para quien queda a cargo del chat de soporte de las apps internas de Siete. Explica cómo funciona, cómo lo usa cada rol, cómo se conecta una app nueva y qué hacer cuando algo falla. Desde el 15/10/2026 lo lleva Jaime.</p>
+      <div class="meta">
+        <span class="chip acc">Versión del 15/10/2026</span>
+        <span class="chip">Widget v3</span>
+        <span class="chip">Lectura: 20 minutos</span>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <section id="resumen">
+      <h2><span class="num">1</span>En un minuto</h2>
+      <p>Cada app interna tiene un botón con la cara de Siete. Al abrirlo, una IA atiende a la persona con el <strong>manual técnico de esa app</strong>. Si con el manual alcanza, lo resuelve ahí. Si no, arma un reporte que la persona revisa y envía. El reporte llega a <strong>PM Tech</strong> como tarea, con responsable, plazo y aviso por email.</p>
+      <div class="grid">
+        <div class="card"><h3>El widget</h3><p>El botón y el chat dentro de cada app. Un script con versión congelada que la app carga con su hash.</p></div>
+        <div class="card"><h3>siete-soporte</h3><p>El servicio con la IA, los manuales, las claves de cada app y la cola de envío al PM. En <code>soporte.wearesiete.com</code>.</p></div>
+        <div class="card"><h3>PM Tech · Soporte apps</h3><p>Donde se conectan las apps, se ven los reportes y se trabajan como tareas. También manda los avisos.</p></div>
+      </div>
+      <div class="note"><strong>La regla de oro:</strong> nada se pierde. Si la IA no está, el chat arma el reporte con las palabras de la persona. Si el PM no contesta, el reporte espera en cola y sale solo cuando vuelve.</div>
+    </section>
+
+    <!-- 2 -->
+    <section id="funciona">
+      <h2><span class="num">2</span>Cómo funciona</h2>
+      <div class="flow">
+        <div class="step"><div class="n">1</div><h3>La persona abre el chat</h3><p>Desde su app, ya logueada. No hay un login aparte.</p></div>
+        <div class="step"><div class="n">2</div><h3>La app pide un pase</h3><p>Su backend, con su clave <code>ssk_</code>, le pide a siete-soporte un pase de 10 minutos para esa persona.</p></div>
+        <div class="step"><div class="n">3</div><h3>La IA atiende</h3><p>Con el manual de la app. Explica, ofrece cerrar ("¿Se resolvió?") o propone un reporte.</p></div>
+        <div class="step"><div class="n">4</div><h3>PM Tech lo organiza</h3><p>El reporte entra como tarea del proyecto "Soporte - &lt;App&gt;", con responsable, plazo y email.</p></div>
+      </div>
+
+      <h3>Las dos salidas de una conversación</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Qué pasa</th><th>Qué ve la persona</th><th>Qué queda en PM Tech</th></tr></thead>
+        <tbody>
+          <tr><td><strong>El manual alcanzó</strong></td><td>"¿Se resolvió?" → "Sí". El chat confirma con el número del ticket.</td><td>Una tarea <strong>ya hecha</strong>, marcada como resuelta por la IA. Sin avisos.</td></tr>
+          <tr><td><strong>Necesita a un programador</strong></td><td>Un borrador (título, severidad, tipo y descripción) que revisa y envía. El chat confirma con el número.</td><td>Una tarea en el proyecto de soporte de la app, asignada a su responsable, con plazo y email al responsable y a los líderes.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Plazos según la severidad</h3>
+      <p>El vencimiento sale de la severidad que propone el chat (la persona la puede corregir): <strong>urgente</strong> vence hoy, <strong>alta</strong> en 2 días, <strong>media</strong> en 5 y <strong>baja</strong> en 10. En PM Tech, el programador lo ajusta con "Elegir plazo…".</p>
+
+      <h3>Cómo se ve una tarea</h3>
+      <p>El título se entiende sin abrirla: <code>quién · proyecto · SOP-n — título</code>, por ejemplo <code>Carla · Outply · SOP-123 — No carga la bandeja de respuestas</code>. El <code>SOP-n</code> es el número que la persona ve en el chat y en "Mis reportes".</p>
+
+      <h3>Lo que ve la persona en "Mis reportes"</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Estado</th><th>Qué significa</th></tr></thead>
+        <tbody>
+          <tr><td>Recibido, enviándolo al equipo…</td><td>siete-soporte lo guardó y todavía no llegó al PM (está en cola).</td></tr>
+          <tr><td>Lo recibió el equipo</td><td>Ya es una tarea en PM Tech. Muestra quién lo tiene y el plazo.</td></tr>
+          <tr><td>En curso</td><td>La tarea está en una columna de trabajo (en curso, en revisión o bloqueada).</td></tr>
+          <tr><td>Resuelto / Resuelto con el asistente</td><td>Se terminó en PM Tech, o lo resolvió la IA.</td></tr>
+          <tr><td>No pudimos registrarlo</td><td>El PM rechazó los datos. Es raro; se ve en los logs (sección 7).</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 3 -->
+    <section id="roles">
+      <h2><span class="num">3</span>Uso diario, por rol</h2>
+
+      <h3>Quien usa una app</h3>
+      <ul>
+        <li>Abre el botón de la cara, abajo a un costado, y cuenta qué pasó con sus palabras.</li>
+        <li>Si la IA da una solución, responde "Sí, se resolvió" o "No, sigue igual".</li>
+        <li>Si propone un reporte, lo revisa, lo corrige si hace falta ("Corregir") y lo envía.</li>
+        <li>En "Mis reportes" sigue cada caso: número, estado, quién lo tiene y para cuándo.</li>
+      </ul>
+
+      <h3>El programador responsable de una app</h3>
+      <ul>
+        <li>Recibe un email por cada reporte que necesita un programador.</li>
+        <li>Lo trabaja como cualquier tarea en el proyecto "Soporte - &lt;App&gt;" de PM Tech: cambia la columna, ajusta el plazo y deja notas.</li>
+        <li>La descripción de la tarea trae lo que contó la persona, la pantalla donde estaba y el resumen de la conversación.</li>
+        <li>Al pasarla a <strong>Hecho</strong>, la persona lo ve como "Resuelto" en "Mis reportes".</li>
+      </ul>
+
+      <h3>El líder de soporte</h3>
+      <ul>
+        <li>Recibe una copia del aviso de cada reporte de su empresa. Hoy el líder es <strong>César Granda</strong>.</li>
+        <li>En PM Tech → Soporte apps tiene tres vistas: <strong>Reportes</strong> (urgentes primero, con filtros por severidad, tipo y app), <strong>Por usuario</strong> (quién reporta y cuánto) y <strong>Apps</strong>.</li>
+        <li>La lista de líderes se cambia arriba de Soporte apps, con <strong>Cambiar</strong>. Es una lista: pueden ser varias personas.</li>
+      </ul>
+
+      <h3>Quien administra (Jaime)</h3>
+      <ul>
+        <li>Conecta las apps nuevas y les carga el manual (sección 4).</li>
+        <li>Mantiene los manuales al día cuando una app cambia de pantallas o mensajes (sección 5).</li>
+        <li>Revisa que no haya reportes trabados en cola y rota claves si hace falta (sección 7).</li>
+        <li>Decide quién es responsable de cada proyecto de soporte y quiénes son los líderes.</li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section id="conectar">
+      <h2><span class="num">4</span>Conectar una app</h2>
+      <p>Lleva unos 15 minutos y se hace todo desde PM Tech, salvo pegar la clave en el backend de la app. Antes de empezar, la app tiene que tener el cambio que suma el chat: una ruta en su backend que entregue el pase y el script del widget en su frontend. El paso 4 del asistente muestra el código, listo para copiar, para FastAPI, Next.js y Express.</p>
+      <ol class="steps">
+        <li><strong>PM Tech → Soporte apps → Apps → Conectar app</strong><span>Nombre de la app, identificador (minúsculas, números y guiones: es el <code>app</code> que usa el widget), el proyecto de la app en PM Tech y los dominios desde los que carga el chat (uno por línea, con https y sin ruta). Se crea su proyecto "Soporte - &lt;App&gt;" vinculado al de la app.</span></li>
+        <li><strong>La clave <code>ssk_…</code></strong><span>Se muestra <strong>una sola vez</strong>. Va en el backend de la app como <code>SIETE_SOPORTE_KEY</code> (en Coolify, Environment Variables del servicio del backend) y nunca en el código del navegador. Después de guardarla, "Ya la guardé".</span></li>
+        <li><strong>El manual técnico</strong><span>Si siete-soporte no tiene el manual de esa app, el asistente lo pide con la estructura que necesita la IA (sección 5). Se puede partir de la plantilla, pegar el texto o subir un <code>.md</code>. Sin manual no se sigue.</span></li>
+        <li><strong>Activación</strong><span>Redesplegar el backend de la app en Coolify. Al abrir la app con un usuario aparece el botón, y la app pasa sola a <strong>Conectada</strong> cuando pide su primer pase.</span></li>
+        <li><strong>Probar</strong><span>Una pregunta cuya respuesta esté en el manual (no crea reportes). Si quieres probar un reporte, márcalo como prueba y termina la tarea después: los avisos llegan de verdad.</span></li>
+      </ol>
+      <div class="note warn"><strong>Ojo:</strong> si la clave se pierde antes de pegarla, no pasa nada: en Apps, "Rotar clave" da una nueva y la anterior deja de valer.</div>
+    </section>
+
+    <!-- 5 -->
+    <section id="manual">
+      <h2><span class="num">5</span>El manual técnico de cada app</h2>
+      <p>Es lo que lee la IA para resolver. Vive en siete-soporte (una versión por app, con fecha y autor) y se carga desde PM Tech. Se valida la <strong>estructura</strong>, no lo que dice: eso es responsabilidad de quien lo escribe.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Sección obligatoria</th><th>Para qué sirve</th></tr></thead>
+        <tbody>
+          <tr><td><code>## Pantallas y qué se hace en cada una</code></td><td>Para qué sirve cada pantalla y los pasos de las tareas frecuentes, con los nombres de botones y menús tal como aparecen en la app.</td></tr>
+          <tr><td><code>## Errores y mensajes frecuentes</code></td><td>Cada mensaje que ve el usuario (el texto exacto), su causa probable y qué puede hacer. Límites y validaciones: tamaños, formatos, cuotas, estados.</td></tr>
+          <tr><td><code>## Qué NO puede resolver el usuario</code></td><td>Los casos que necesitan un programador o un admin: ahí la IA arma el reporte en vez de improvisar.</td></tr>
+          <tr><td><code>## Glosario</code></td><td>Los términos propios de la app, para que la IA entienda cómo habla el equipo.</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Lleva un título <code># &lt;Nombre de la app&gt; — manual de soporte</code>, al menos <strong>300 palabras</strong> y como mucho 120.000 caracteres.</li>
+        <li><strong>Nunca</strong> claves, tokens ni contraseñas: el manual va tal cual al modelo. siete-soporte rechaza los que parecen secretos.</li>
+        <li>Se actualiza en Apps → "Actualizar manual" cada vez que la app cambia de pantallas, botones o mensajes. Un manual viejo hace que la IA dé pasos que ya no existen.</li>
+        <li>Los de AISDR, Response Manager, Outply y Marketing AI están escritos en el repo <code>siete-soporte</code>, carpeta <code>manuales/</code>.</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section id="config">
+      <h2><span class="num">6</span>Configuración</h2>
+      <p>Todo corre en Coolify. Las claves se pegan a mano y se ven una sola vez: copiarlas directo al lugar indicado, nunca a un chat ni a un documento. Después de cambiar una variable hay que <strong>redesplegar</strong> ese servicio.</p>
+
+      <h3>siete-soporte (Coolify → AI Support Sync → siete-soporte)</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variable</th><th>Qué es</th><th>De dónde sale</th></tr></thead>
+        <tbody>
+          <tr><td><code>PM_API_KEY</code></td><td>Con esta clave siete-soporte le manda los reportes al PM.</td><td><code>pm soporte-emitir-clave --empresa siete</code> en la terminal del contenedor <code>api</code> del PM. Empieza con <code>pmk_</code>.</td></tr>
+          <tr><td><code>PM_API_URL</code></td><td>La API del PM.</td><td>Fija.</td></tr>
+          <tr><td><code>ANTHROPIC_API_KEY</code></td><td>La IA. Opcional: sin ella el chat funciona en modo "sin asistente".</td><td>La consola de Anthropic, con saldo.</td></tr>
+          <tr><td><code>SOPORTE_ADMIN_KEY</code></td><td>Con esta clave el PM administra apps y manuales.</td><td>Coolify la genera (<code>SERVICE_PASSWORD_64_ADMIN</code>).</td></tr>
+          <tr><td><code>SOPORTE_TOKEN_SECRET</code></td><td>Firma los pases de 10 minutos. Sólo la conoce este servicio.</td><td>Coolify la genera (<code>SERVICE_PASSWORD_64_PASES</code>).</td></tr>
+          <tr><td><code>CHAT_MODEL</code></td><td>El modelo. Por defecto Claude Sonnet 5.5, con esfuerzo bajo.</td><td>Opcional.</td></tr>
+          <tr><td><code>SYNC_INTERVALO_SEGUNDOS</code></td><td>Cada cuánto se reintentan los reportes en cola (60).</td><td>Opcional.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>PM Tech (Coolify → PM 21 Manager → Platform)</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variable</th><th>Qué es</th></tr></thead>
+        <tbody>
+          <tr><td><code>SOPORTE_ADMIN_KEY</code></td><td>El mismo valor que <code>SERVICE_PASSWORD_64_ADMIN</code> de siete-soporte. Sin ella, "Conectar app" avisa que falta.</td></tr>
+          <tr><td><code>SOPORTE_URL</code></td><td>Opcional; por defecto, siete-soporte en producción.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Cada app conectada</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Dónde</th><th>Variable</th><th>Qué es</th></tr></thead>
+        <tbody>
+          <tr><td>Backend</td><td><code>SIETE_SOPORTE_KEY</code></td><td>La clave <code>ssk_</code> de la app. Sin ella, la ruta del pase contesta 503 y el botón no aparece.</td></tr>
+          <tr><td>Backend</td><td><code>SIETE_SOPORTE_URL</code></td><td>Opcional; por defecto, producción.</td></tr>
+          <tr><td>Frontend</td><td><code>VITE_SOPORTE_URL</code> o <code>NEXT_PUBLIC_SOPORTE_URL</code></td><td>Opcional. Vacío apaga el widget (útil en desarrollo).</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><strong>Buena práctica:</strong> en Coolify, estas claves sólo hacen falta con la app corriendo. En cada una conviene poner "Build time: Not available during build" (Coolify las marca disponibles en el build por defecto).</div>
+    </section>
+
+    <!-- 7 -->
+    <section id="operar">
+      <h2><span class="num">7</span>Operación</h2>
+
+      <h3>Despliegues</h3>
+      <ul>
+        <li>siete-soporte, PM Tech y las apps se despliegan solas con cada push a <code>main</code> (webhook de Coolify).</li>
+        <li>Un cambio de variables pide <strong>Redeploy</strong> del servicio, a mano.</li>
+        <li>siete-soporte migra la base al arrancar; si la migración falla, no levanta (el anterior sigue andando).</li>
+        <li>AISDR: no publicar cambios visibles de lunes a viernes, de 09:00 a 12:00 (Lima).</li>
+      </ul>
+
+      <h3>Chequeos rápidos</h3>
+      <ul>
+        <li><code>https://soporte.wearesiete.com/health</code> → <code>{"status":"ok"}</code>.</li>
+        <li>PM Tech → Soporte apps → Apps: cada app dice <strong>Conectada</strong> y cuándo pidió su último pase.</li>
+        <li>Reportes viejos en "Recibido, enviándolo al equipo…" = algo traba el envío al PM (ver la tabla de abajo).</li>
+      </ul>
+
+      <h3>Qué buscar en los logs (Coolify → Runtime Logs)</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Evento</th><th>Dónde</th><th>Qué significa</th></tr></thead>
+        <tbody>
+          <tr><td><code>chat_sin_clave</code></td><td>siete-soporte</td><td>Falta <code>ANTHROPIC_API_KEY</code>: el chat responde sin IA.</td></tr>
+          <tr><td><code>chat_error_api</code> / <code>chat_sin_conexion</code></td><td>siete-soporte</td><td>Anthropic falló (saldo, caída o red). El chat sigue en modo sin asistente.</td></tr>
+          <tr><td><code>pm_envio_ok</code></td><td>siete-soporte</td><td>Un reporte llegó al PM.</td></tr>
+          <tr><td><code>pm_envio_reintento</code></td><td>siete-soporte</td><td>El PM no contestó: se reintenta solo (1, 2, 4… minutos, tope 1 hora).</td></tr>
+          <tr><td><code>pm_clave_rechazada</code></td><td>siete-soporte</td><td><code>PM_API_KEY</code> mal o revocada. Los reportes esperan hasta que se corrija.</td></tr>
+          <tr><td><code>pm_envio_rechazado</code></td><td>siete-soporte</td><td>El PM rechazó los datos (422). No se reintenta: revisar el mensaje.</td></tr>
+          <tr><td><code>pm_sin_configurar</code></td><td>siete-soporte</td><td>Falta la URL o la clave del PM.</td></tr>
+          <tr><td><code>sesion_rechazada</code></td><td>siete-soporte</td><td>Una app pidió un pase con una clave que no existe o está apagada.</td></tr>
+          <tr><td><code>aviso_de_soporte</code></td><td>PM, contenedor api</td><td>Se encoló el email al responsable o al líder.</td></tr>
+          <tr><td><code>ticket_de_soporte_sin_a_quien_avisar</code></td><td>PM, contenedor api</td><td>El proyecto de soporte no tiene responsable ni líderes.</td></tr>
+          <tr><td><code>job_terminado</code> (<code>sent</code>, <code>failed</code>)</td><td>PM, contenedor worker</td><td>Cuántos emails salieron en cada pasada.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Tareas frecuentes</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Para…</th><th>Haz esto</th></tr></thead>
+        <tbody>
+          <tr><td>Cambiar los líderes</td><td>Soporte apps → barra de arriba → Cambiar → elegir → Guardar.</td></tr>
+          <tr><td>Cambiar quién recibe los reportes de una app</td><td>Cambiar el responsable del proyecto "Soporte - &lt;App&gt;" en PM Tech.</td></tr>
+          <tr><td>Rotar la clave de una app</td><td>Apps → Rotar clave, pegar la nueva en el backend de la app y redesplegar. La anterior deja de valer al instante.</td></tr>
+          <tr><td>Renovar la clave del PM</td><td><code>pm soporte-emitir-clave --empresa siete</code>, pegarla en siete-soporte, redesplegar y revocar la vieja con <code>pm soporte-revocar-clave</code>.</td></tr>
+          <tr><td>Apagar el chat en una app</td><td>Borrar <code>SIETE_SOPORTE_KEY</code> de su backend y redesplegar: el botón desaparece.</td></tr>
+          <tr><td>Actualizar un manual</td><td>Apps → Actualizar manual. Queda una versión nueva; la IA la usa desde el siguiente mensaje.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 8 -->
+    <section id="widget">
+      <h2><span class="num">8</span>El widget y sus versiones</h2>
+      <div class="cara">
+        <span class="bola"><svg width="46" height="46" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.4Q7.1 4.2 9.2 5.1M14.8 5.1Q16.9 4.2 19 5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="7.2" cy="9.2" rx="1.7" ry="2.2" fill="currentColor"/><ellipse cx="16.8" cy="9.2" rx="1.7" ry="2.2" fill="currentColor"/><path d="M10.6 11.6H13.8L11.7 15.6M8.2 17.6Q12 20.5 15.8 17.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <p>La cara de Siete: cejas, ojos, sonrisa y un 7 de nariz. Parpadea, mueve las cejas mientras piensa, se alegra al registrar un reporte y duda si algo falla. Con "reducir movimiento", se queda quieta.</p>
+      </div>
+      <p>Las apps cargan una <strong>versión congelada</strong> del widget con su hash (SRI): si alguien cambiara el archivo en el servidor, el navegador no lo correría. Por eso una versión publicada <strong>nunca se edita</strong>; un cambio es una versión nueva.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Versión</th><th>Qué trajo</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><code>widget.v1.js</code></td><td>El chat, el borrador y "Mis reportes".</td><td><span class="badge off">Congelada</span></td></tr>
+          <tr><td><code>widget.v2.js</code></td><td>El número del ticket (SOP-n) en "Mis reportes".</td><td><span class="badge off">Congelada</span></td></tr>
+          <tr><td><code>widget.v3.js</code></td><td>La cara de Siete y la confirmación con el SOP-n.</td><td><span class="badge ok">La actual</span></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Cómo publicar una versión nueva (v4)</h3>
+      <ol>
+        <li>En <code>siete-soporte</code>: copiar <code>static/widget.v3.js</code> a <code>widget.v4.js</code>, hacer el cambio y agregar la ruta y la línea en <code>.gitattributes</code> (sin conversión de fin de línea).</li>
+        <li>Probarlo con las maquetas (<code>npx playwright test</code>) y <strong>mirarlo</strong> en claro y oscuro antes de fijar nada.</li>
+        <li>Calcular el hash: <code>openssl dgst -sha384 -binary static/widget.v4.js | openssl base64 -A</code>, y fijarlo en <code>tests/test_app.py</code>.</li>
+        <li>Desplegar siete-soporte y comprobar que el archivo en producción da el mismo hash.</li>
+        <li>Un PR por app (y uno en el PM, que muestra el snippet en el asistente) con la URL y el hash nuevos.</li>
+      </ol>
+    </section>
+
+    <!-- 9 -->
+    <section id="seguridad">
+      <h2><span class="num">9</span>Seguridad</h2>
+      <ul>
+        <li><strong>La clave de cada app vive en su backend.</strong> El navegador sólo recibe un pase de 10 minutos para esa persona. siete-soporte guarda un hash de la clave, nunca la clave.</li>
+        <li><strong>La app de un reporte sale del pase</strong>, no de lo que mande el navegador. Un pase vencido, mal firmado o de larga vida no entra.</li>
+        <li><strong>Cada app sólo habla desde sus dominios</strong>: los que se registran al conectarla.</li>
+        <li><strong>El widget no ejecuta HTML</strong> de lo que escribe la persona o la IA, y lo que se teclea en él no dispara atajos de la app.</li>
+        <li><strong>La administración es sólo del PM</strong>, con <code>SOPORTE_ADMIN_KEY</code>. Las rutas de prueba no existen en producción.</li>
+        <li><strong>Los manuales no llevan secretos</strong>: van al modelo tal cual.</li>
+        <li>La conversación se guarda por persona: si alguien cierra sesión y entra otra en la misma pestaña, no ve el chat anterior.</li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section id="problemas">
+      <h2><span class="num">10</span>Solución de problemas</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Síntoma</th><th>Causa probable</th><th>Qué hacer</th></tr></thead>
+        <tbody>
+          <tr><td>El botón no aparece en una app</td><td>Falta <code>SIETE_SOPORTE_KEY</code> en su backend, o el backend no se redesplegó, o la versión de la app no tiene el cambio.</td><td>Revisar la variable, redesplegar y abrir la app con un usuario logueado.</td></tr>
+          <tr><td>"El asistente no está disponible en este momento"</td><td>Sin <code>ANTHROPIC_API_KEY</code>, sin saldo o Anthropic caído (logs: <code>chat_sin_clave</code> o <code>chat_error_api</code>).</td><td>Cargar la clave o el saldo y redesplegar siete-soporte. Mientras tanto los reportes salen igual.</td></tr>
+          <tr><td>"No pude verificar tu sesión"</td><td>El pase venció o la clave de la app no vale.</td><td>Recargar la página. Si sigue, revisar la clave de la app (logs: <code>sesion_rechazada</code>) y rotarla si hace falta.</td></tr>
+          <tr><td>"No me pude conectar"</td><td>siete-soporte caído, o un dominio de la app que no está registrado.</td><td>Mirar <code>/health</code>. Si responde, agregar el dominio en Apps (el chat sólo habla desde los dominios registrados).</td></tr>
+          <tr><td>Reportes en "Recibido, enviándolo al equipo…" durante horas</td><td>El PM no contesta o rechaza la clave (<code>pm_clave_rechazada</code>).</td><td>Revisar el PM y <code>PM_API_KEY</code>. Al corregir, salen solos.</td></tr>
+          <tr><td>No llegan los emails</td><td>El proyecto de soporte no tiene responsable, o no hay líderes, o falló el envío.</td><td>Logs del PM: <code>aviso_de_soporte</code> y <code>job_terminado</code>. Revisar responsable y líderes.</td></tr>
+          <tr><td>La IA da pasos que no existen</td><td>El manual quedó viejo.</td><td>Actualizar el manual de esa app.</td></tr>
+          <tr><td><code>soporte.wearesiete.com</code> no abre</td><td>DNS: desde el 14/10 no hay comodín, cada servicio tiene su registro.</td><td>Revisar el registro A <code>soporte</code> en el DNS de la empresa.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 11 -->
+    <section id="estado">
+      <h2><span class="num">11</span>Estado y pendientes</h2>
+      <p>Al 15/10/2026, 15:00 (Lima).</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pieza</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody id="tabla-estado">
+          <tr><td>siete-soporte</td><td><span class="badge ok">En producción</span></td><td>Con el widget v3. La IA espera su clave: hoy responde en modo sin asistente.</td></tr>
+          <tr><td>PM Tech · Soporte apps</td><td><span class="badge ok">En producción</span></td><td>Conectar app, reportes, panel por usuario, líderes y avisos. El asistente de instalación pasa al v3 con el PR #2.</td></tr>
+          <tr><td>Marketing AI</td><td><span class="badge ok">En uso</span></td><td>Conectada desde el 14/10, con su manual y la prueba de punta a punta ok (SOP-1). Sus reportes le llegan a Jaime. La cara de Siete llega con el PR #201.</td></tr>
+          <tr><td>AISDR</td><td><span class="badge off">Pendiente de decisión</span></td><td>El código está listo (PR #242). Para conectarla falta decidir a qué proyecto de PM Tech se vincula ("AI SDR" está culminado y "Conectar app" sólo ofrece proyectos activos) y quién recibe sus reportes.</td></tr>
+          <tr><td>Outply</td><td><span class="badge wait">Conectándose</span></td><td>Conectada en PM Tech el 15/10 (proyecto "Soporte - Outply", responsable Jaime). Falta mergear el PR #131, pegar su clave en el servicio <code>outply-api</code> y redesplegar.</td></tr>
+          <tr><td>Response Manager (con UniBox)</td><td><span class="badge wait">Espera aprobación</span></td><td>PR #123, ya con el v3. Espera el visto bueno de quien lleva la verificación de Google (CASA).</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Pendientes, en orden</h3>
+      <ol id="pendientes">
+        <li>Mergear los PRs #131 (Outply), #201 (Marketing AI), #2 (PM) y #242 (AISDR; no cambia nada visible hasta conectarla).</li>
+        <li>Outply: pegar su clave en <code>outply-api</code>, redesplegar y subir su manual (<code>manuales/outply.md</code>) desde Apps.</li>
+        <li>Cargar <code>ANTHROPIC_API_KEY</code> en siete-soporte y redesplegar.</li>
+        <li>AISDR: decidir su proyecto y su responsable, y conectarla como Outply (manual: <code>manuales/aisdr.md</code>).</li>
+        <li>En Coolify, poner las claves como "Not available during build" (sección 6).</li>
+        <li>Response Manager, con el OK de CASA.</li>
+      </ol>
+      <div class="note"><strong>Arreglos menores pendientes:</strong> en el PM, un test de vencimientos falla si el CI corre entre las 00:00 y las 05:00 UTC (compara la fecha del runner con la de la empresa), y el job "dependencias" marca avisos de librerías del frontend. Ninguno afecta a producción. El detalle está en <code>docs/bugs-encontrados.md</code>.</div>
+    </section>
+
+    <!-- 12 -->
+    <section id="donde">
+      <h2><span class="num">12</span>Dónde está todo</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Qué</th><th>Dónde</th></tr></thead>
+        <tbody>
+          <tr><td>El servicio y el widget</td><td>Repo <code>siete-soporte</code> (organización de GitHub de Siete). Coolify → AI Support Sync.</td></tr>
+          <tr><td>Soporte apps del PM</td><td>Repo <code>project-manager-tech</code>, carpeta <code>app/modules/support</code> y <code>web/src/features/support</code>. Coolify → PM 21 Manager → Platform.</td></tr>
+          <tr><td>Las apps</td><td>Repos <code>AI-SDR</code>, <code>reply_v2</code> (Outply), <code>marketing-ai-engine</code> y <code>SDR-Response-Manager</code>.</td></tr>
+          <tr><td>La historia y las decisiones</td><td><code>siete-soporte/HANDOFF_integracion_pm_2026-09-30.md</code>.</td></tr>
+          <tr><td>Cómo integrar una app, en detalle</td><td><code>siete-soporte/docs/integracion-apps.md</code> y <code>docs/integracion/&lt;app&gt;.md</code>.</td></tr>
+          <tr><td>Los hallazgos (48) y su estado</td><td><code>siete-soporte/docs/bugs-encontrados.md</code>.</td></tr>
+          <tr><td>Los manuales técnicos</td><td><code>siete-soporte/manuales/</code>.</td></tr>
+          <tr><td>El proyecto en PM Tech</td><td>Proyectos → AI Support Sync (la tarea "Terminar la implementación" tiene el checklist).</td></tr>
+          <tr><td>Presentación para el equipo</td><td><a href="./">La página de AI Support Sync</a>.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Los enlaces exactos de Coolify y del PM están en el documento interno "AI Support Sync" y en el handoff; no van acá porque esta página es pública.</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="glosario">
+      <h2><span class="num">13</span>Glosario</h2>
+      <div class="table-wrap"><table>
+        <tbody>
+          <tr><td><strong>Clave de la app</strong> (<code>ssk_…</code>)</td><td>La que el backend de cada app usa para pedir pases. Se ve una vez; se rota desde Apps.</td></tr>
+          <tr><td><strong>Clave del PM</strong> (<code>pmk_…</code>)</td><td>La que usa siete-soporte para mandarle reportes al PM.</td></tr>
+          <tr><td><strong>Pase</strong></td><td>El permiso de 10 minutos que identifica a la persona y a su app ante siete-soporte.</td></tr>
+          <tr><td><strong>Manual técnico</strong></td><td>El texto con el que la IA resuelve. Uno por app, con versiones.</td></tr>
+          <tr><td><strong>Proyecto de soporte</strong></td><td>"Soporte - &lt;App&gt;" en PM Tech, vinculado al proyecto de la app. Ahí caen sus reportes.</td></tr>
+          <tr><td><strong>SOP-n</strong></td><td>El número del ticket. El mismo en el chat, en "Mis reportes" y en PM Tech.</td></tr>
+          <tr><td><strong>Líderes</strong></td><td>Quienes reciben copia de todos los avisos de su empresa.</td></tr>
+          <tr><td><strong>Cola (outbox)</strong></td><td>Donde esperan los reportes que todavía no llegaron al PM. Se reintentan solos.</td></tr>
+          <tr><td><strong>SRI</strong></td><td>El hash con el que cada app carga el widget: si el archivo cambia, el navegador no lo corre.</td></tr>
+          <tr><td><strong>Modo sin asistente</strong></td><td>Cuando la IA no está: el chat arma el reporte con las palabras de la persona.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="foot">Preparado por Ily Rivas con Claude Code para el traspaso a Jaime · 15/10/2026.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function write(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+
+  var root = document.documentElement;
+  var saved = read("ass-theme");
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme")
+      ? root.getAttribute("data-theme") === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    write("ass-theme", next);
+  });
+
+  // El índice marca la sección que se está leyendo.
+  var links = Array.prototype.slice.call(document.querySelectorAll("#toc-list a"));
+  if (!("IntersectionObserver" in window)) return;
+  var porId = {};
+  links.forEach(function (a) { porId[a.getAttribute("href").slice(1)] = a; });
+  var obs = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove("on"); });
+      var a = porId[e.target.id];
+      if (a) a.classList.add("on");
+    });
+  }, { rootMargin: "-20% 0px -70% 0px" });
+  Object.keys(porId).forEach(function (id) {
+    var s = document.getElementById(id);
+    if (s) obs.observe(s);
+  });
+})();
+</script>
+</body>
+</html>
