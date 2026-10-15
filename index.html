@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Support Sync</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="El chat de ayuda de las apps internas de Siete: una IA resuelve con el manual de cada app y lo que no resuelve llega a PM Tech como tarea con responsable y plazo.">
+<meta property="og:title" content="AI Support Sync · Siete">
+<meta property="og:description" content="Cada problema de una app interna, resuelto por la IA o convertido en una tarea con dueño y plazo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%235b5bd6'/%3E%3Cpath d='M9 11.5a3.5 3.5 0 0 1 3.5-3.5h7a3.5 3.5 0 0 1 3.5 3.5v5a3.5 3.5 0 0 1-3.5 3.5H15l-4 3.5V20a3.5 3.5 0 0 1-2-3.2z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f7fb;
+  --surface: #ffffff;
+  --surface-2: #f0f0f7;
+  --text: #1b1b29;
+  --muted: #5d5d73;
+  --line: #e3e3ee;
+  --accent: #5b5bd6;
+  --accent-soft: #ececfd;
+  --accent-text: #3e3eb8;
+  --on-accent: #ffffff;
+  --ok: #1f8a5b;
+  --ok-soft: #e3f5ec;
+  --warn: #b26a00;
+  --warn-soft: #fdf1dc;
+  --bad: #c2413b;
+  --bad-soft: #fbe7e6;
+  --shadow: 0 1px 2px rgba(20, 20, 50, .05), 0 8px 24px rgba(20, 20, 50, .06);
+  --radius: 16px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111118;
+    --surface: #1a1a24;
+    --surface-2: #222230;
+    --text: #ececf4;
+    --muted: #a4a4bb;
+    --line: #2e2e3e;
+    --accent: #8b8bf0;
+    --accent-soft: #26264a;
+    --accent-text: #b4b4ff;
+    --on-accent: #14142e;
+    --ok: #4cc38a;
+    --ok-soft: #173326;
+    --warn: #f0b048;
+    --warn-soft: #3a2c12;
+    --bad: #f07a73;
+    --bad-soft: #3b1d1b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111118;
+  --surface: #1a1a24;
+  --surface-2: #222230;
+  --text: #ececf4;
+  --muted: #a4a4bb;
+  --line: #2e2e3e;
+  --accent: #8b8bf0;
+  --accent-soft: #26264a;
+  --accent-text: #b4b4ff;
+  --on-accent: #14142e;
+  --ok: #4cc38a;
+  --ok-soft: #173326;
+  --warn: #f0b048;
+  --warn-soft: #3a2c12;
+  --bad: #f07a73;
+  --bad-soft: #3b1d1b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .bar i { transition: none; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-text); }
+code {
+  font: .88em/1.4 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .1em .4em;
+  overflow-wrap: anywhere;
+}
+h1, h2, h3 { line-height: 1.2; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; }
+h3 { font-size: 1.08rem; font-weight: 700; }
+p { margin: 0; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.card, .flow-node, .story > *, .role > *, .status-row > *, .check label, .links > *, .why > * { min-width: 0; }
+
+/* Barra superior */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; text-decoration: none; color: var(--text); white-space: nowrap; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; }
+.nav { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { color: var(--muted); text-decoration: none; font-size: .9rem; font-weight: 600; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+.nav a:hover { color: var(--text); background: var(--surface-2); }
+.theme-btn {
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  width: 36px; height: 36px; border-radius: 10px; cursor: pointer; flex: none;
+  display: grid; place-items: center;
+}
+@media (max-width: 860px) { .nav { display: none; } .theme-btn { margin-left: auto; } }
+
+/* Portada */
+.hero { padding: 72px 0 56px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ok-soft); color: var(--ok);
+  font-weight: 700; font-size: .85rem; padding: 6px 12px; border-radius: 999px;
+}
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.hero h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; margin: 18px 0 16px; letter-spacing: -.02em; }
+.hero h1 span { color: var(--accent); }
+.hero .lead { font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--muted); max-width: 720px; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  font-weight: 700; padding: 12px 18px; border-radius: 12px; font-size: .95rem;
+}
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-ghost { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 44px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.stat b { display: block; font-size: 1.7rem; font-weight: 800; color: var(--accent-text); }
+.stat span { color: var(--muted); font-size: .9rem; }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* Secciones */
+section { padding: 64px 0; }
+section.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.eyebrow { color: var(--accent-text); font-weight: 800; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+.section-lead { color: var(--muted); max-width: 720px; margin-top: 12px; font-size: 1.05rem; }
+.grid { display: grid; gap: 16px; margin-top: 32px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 860px) { .g3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .g2, .g3 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+section.alt .card { background: var(--bg); box-shadow: none; }
+.card p { color: var(--muted); margin-top: 8px; }
+.icon { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-soft); color: var(--accent-text); display: grid; place-items: center; margin-bottom: 14px; }
+.icon svg { width: 22px; height: 22px; }
+
+/* Origen */
+.story { display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; margin-top: 32px; align-items: start; }
+@media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
+.story-text p + p { margin-top: 14px; }
+.story-text p { color: var(--muted); font-size: 1.04rem; }
+.story-text strong { color: var(--text); }
+.before-after { display: grid; gap: 12px; }
+.ba { border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--line); }
+.ba.before { background: var(--bad-soft); }
+.ba.after { background: var(--ok-soft); }
+.ba h3 { font-size: .95rem; }
+.ba.before h3 { color: var(--bad); }
+.ba.after h3 { color: var(--ok); }
+.ba ul { margin: 8px 0 0; padding-left: 18px; }
+.ba li { margin: 4px 0; }
+
+/* Flujo */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 36px; position: relative; }
+.flow-step { position: relative; padding: 0 10px; text-align: center; }
+.flow-node {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px 14px; box-shadow: var(--shadow); height: 100%;
+}
+section.alt .flow-node { background: var(--bg); box-shadow: none; }
+.flow-node .num { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-weight: 800; display: grid; place-items: center; margin: 0 auto 12px; }
+.flow-node p { color: var(--muted); font-size: .92rem; margin-top: 8px; }
+.flow-step:not(:last-child)::after {
+  content: ""; position: absolute; right: -7px; top: 44px; width: 14px; height: 14px;
+  border-top: 3px solid var(--accent); border-right: 3px solid var(--accent); transform: rotate(45deg);
+  z-index: 1;
+}
+@media (max-width: 860px) {
+  .flow { grid-template-columns: 1fr; gap: 22px; }
+  .flow-step { padding: 0; }
+  .flow-step:not(:last-child)::after { right: auto; left: 50%; top: auto; bottom: -18px; margin-left: -7px; transform: rotate(135deg); }
+}
+.outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+@media (max-width: 620px) { .outcomes { grid-template-columns: 1fr; } }
+.outcome { border-radius: var(--radius); padding: 20px; border: 1px solid var(--line); }
+.outcome.ai { background: var(--ok-soft); }
+.outcome.dev { background: var(--warn-soft); }
+.outcome h3 { display: flex; align-items: center; gap: 8px; }
+.outcome p { margin-top: 8px; color: var(--text); opacity: .85; }
+.sla { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.sla span { font-size: .85rem; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.sla .u { color: var(--bad); }
+.sla .h { color: var(--warn); }
+.sla .m { color: var(--accent-text); }
+.sla .l { color: var(--ok); }
+.ticket {
+  margin-top: 16px; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px;
+  padding: 12px 14px; font-weight: 600; font-size: .95rem; overflow-wrap: anywhere;
+}
+.ticket small { display: block; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+
+/* Línea de tiempo */
+.timeline { margin-top: 36px; position: relative; padding-left: 28px; }
+.timeline::before { content: ""; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.tl-item { position: relative; padding-bottom: 26px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -26px; top: 6px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--accent);
+}
+.tl-item.done::before { background: var(--accent); }
+.tl-date { font-weight: 800; color: var(--accent-text); font-size: .88rem; }
+.tl-item h3 { margin-top: 2px; }
+.tl-item ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); }
+.tl-item li { margin: 3px 0; }
+
+/* Tecnologías */
+.tech-group h3 { font-size: .95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip { font-size: .88rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+section.alt .chip { background: var(--surface); }
+
+/* Urgencia */
+.why { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+@media (max-width: 860px) { .why { grid-template-columns: 1fr; } }
+.why .card b { display: block; font-size: 2rem; font-weight: 800; color: var(--accent-text); line-height: 1.1; }
+.callout {
+  margin-top: 24px; background: var(--accent); color: var(--on-accent); border-radius: var(--radius);
+  padding: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;
+}
+.callout p { color: var(--on-accent); max-width: 640px; font-size: 1.05rem; }
+.callout .btn { background: var(--on-accent); color: var(--accent-text); }
+
+/* Pestañas de roles */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 32px; }
+.tab {
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  font: inherit; font-weight: 700; font-size: .92rem; padding: 10px 16px; border-radius: 12px; cursor: pointer;
+}
+section.alt .tab { background: var(--bg); }
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.panel { margin-top: 16px; }
+.panel[hidden] { display: none; }
+.role { display: grid; grid-template-columns: .8fr 1.2fr; gap: 24px; }
+@media (max-width: 760px) { .role { grid-template-columns: 1fr; } }
+.role-where { color: var(--muted); }
+.role-where strong { color: var(--text); display: block; margin-bottom: 4px; }
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { counter-increment: s; position: relative; padding-left: 40px; margin-bottom: 14px; }
+.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-text); font-weight: 800; font-size: .85rem; display: grid; place-items: center;
+}
+.steps li span { color: var(--muted); display: block; font-size: .94rem; }
+
+/* Estado y checklist */
+.status-list { display: grid; gap: 10px; margin-top: 28px; }
+.status-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px;
+}
+section.alt .status-row { background: var(--bg); }
+.status-row p { color: var(--muted); font-size: .92rem; margin-top: 2px; }
+.badge { font-size: .8rem; font-weight: 800; padding: 5px 10px; border-radius: 999px; white-space: nowrap; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.wait { background: var(--warn-soft); color: var(--warn); }
+.badge.off { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+@media (max-width: 520px) { .status-row { grid-template-columns: 1fr; } .badge { justify-self: start; } }
+
+.progress { margin-top: 28px; display: flex; align-items: center; gap: 14px; }
+.bar { flex: 1; height: 10px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .3s; }
+.progress b { font-size: .9rem; white-space: nowrap; }
+.checklist { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+.check {
+  display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+}
+section.alt .check { background: var(--bg); }
+.check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--ok); cursor: pointer; }
+.check label { cursor: pointer; }
+.check h3 { font-size: 1rem; }
+.check p { color: var(--muted); font-size: .93rem; margin-top: 4px; }
+.check .who { display: inline-block; font-size: .78rem; font-weight: 800; color: var(--accent-text); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
+.check:has(input:checked) h3 { text-decoration: line-through; opacity: .6; }
+
+/* Preguntas */
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 18px; }
+section.alt details { background: var(--bg); }
+details + details { margin-top: 10px; }
+summary { cursor: pointer; font-weight: 700; padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--accent-text); }
+details[open] summary::after { content: "–"; }
+details p { color: var(--muted); padding-bottom: 16px; }
+details p + p { margin-top: -6px; }
+
+.links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 28px; }
+@media (max-width: 760px) { .links { grid-template-columns: 1fr; } }
+.links .card h3 { font-size: .98rem; }
+.links .card p { font-size: .92rem; }
+
+footer { padding: 40px 0 56px; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio">
+      <span class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v6a3.5 3.5 0 0 1-3.5 3.5H11l-5 4v-4.3A3.5 3.5 0 0 1 4 13.5z" fill="currentColor"/></svg></span>
+      AI Support Sync
+    </a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#idea">La idea</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#hicimos">Qué hicimos</a>
+      <a href="#tecnologia">Tecnología</a>
+      <a href="#practicas">Buenas prácticas</a>
+      <a href="#onboarding">Onboarding</a>
+      <a href="#entrega">Entrega</a>
+    </nav>
+    <button class="theme-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="inicio">
+  <!-- Portada -->
+  <div class="hero">
+    <div class="wrap">
+      <span class="pill"><span class="dot"></span>En producción desde el 14/10/2026 · faltan unos minutos de configuración</span>
+      <h1>Cada problema de una app, <span>resuelto o con dueño</span>.</h1>
+      <p class="lead">AI Support Sync pone un chat de ayuda dentro de cada app interna de Siete. Una IA atiende a la persona con el manual técnico de su app; lo que no puede resolver se convierte en una tarea en PM Tech, con responsable, plazo y aviso por email.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#entrega">Ver qué falta para activarlo</a>
+        <a class="btn btn-ghost" href="#onboarding">Cómo se usa, por rol</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>4</b><span>apps internas con la integración lista</span></div>
+        <div class="stat"><b>1</b><span>lugar para ver todos los reportes: PM Tech</span></div>
+        <div class="stat"><b>~15 min</b><span>para sumar el chat a una app nueva</span></div>
+        <div class="stat"><b>47</b><span>hallazgos documentados en el camino</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- La idea -->
+  <section id="idea" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">De dónde sale la idea</div>
+      <h2>Los problemas llegaban por cualquier lado y se perdían</h2>
+      <div class="story">
+        <div class="story-text">
+          <p>Siete tiene varias apps internas que usa todos los días: <strong>AISDR</strong>, <strong>Response Manager</strong> (con UniBox adentro), <strong>Outply</strong> y <strong>Marketing AI</strong>. Cuando algo fallaba, el aviso llegaba por WhatsApp, por Slack o de palabra. Nadie sabía cuántos problemas había, quién los tenía ni para cuándo estarían resueltos.</p>
+          <p>Además, buena parte de esas consultas ya tenía respuesta: era cuestión de saber dónde estaba un botón o qué significaba un error. El equipo de desarrollo terminaba contestando lo mismo una y otra vez.</p>
+          <p>La propuesta, del área de Tecnología: <strong>un chat de ayuda dentro de cada app</strong>, con una IA que conoce el manual de esa app, y que <strong>todo lo que no resuelva entre a PM Tech</strong>, la herramienta donde el equipo ya organiza su trabajo. Después se sumó un pedido clave: que conectar el chat a cualquier proyecto nuevo de la empresa sea tan simple como pegar una clave.</p>
+        </div>
+        <div class="before-after">
+          <div class="ba before">
+            <h3>Antes</h3>
+            <ul>
+              <li>Reportes sueltos en chats y conversaciones</li>
+              <li>Sin responsable ni fecha de resolución</li>
+              <li>Las mismas preguntas, contestadas a mano</li>
+              <li>Sin datos de qué app falla más ni quién reporta</li>
+            </ul>
+          </div>
+          <div class="ba after">
+            <h3>Con AI Support Sync</h3>
+            <ul>
+              <li>Un botón de ayuda en la misma app, donde ocurre el problema</li>
+              <li>La IA resuelve lo que el manual ya responde</li>
+              <li>Lo demás es una tarea con dueño, plazo y aviso</li>
+              <li>El usuario sigue su reporte; el equipo ve todo en un tablero</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué resuelve -->
+  <section id="resuelve">
+    <div class="wrap">
+      <div class="eyebrow">Qué resuelve</div>
+      <h2>Menos interrupciones, más trazabilidad</h2>
+      <p class="section-lead">El objetivo es doble: que el equipo de desarrollo deje de atender lo que el manual ya responde, y que nada de lo que sí necesita a un programador se pierda.</p>
+      <div class="grid g3">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 1.7 1.7.8-1.7.8L19 20l-.8-1.7-1.7-.8 1.7-.8z"/></svg></div>
+          <h3>Ayuda inmediata</h3>
+          <p>La persona pregunta en lenguaje natural y la IA responde con el manual técnico de su app: pantallas, errores frecuentes y cómo salir de ellos.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/></svg></div>
+          <h3>Tareas con dueño y plazo</h3>
+          <p>Lo que la IA no resuelve se convierte en un reporte (bug, mejora o funcionalidad nueva) y entra a PM Tech con responsable y vencimiento según su severidad.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15v-4"/><path d="M12 15V8"/><path d="M16 15v-6"/></svg></div>
+          <h3>Visibilidad real</h3>
+          <p>Un panel por usuario muestra quién reporta, cuántos reportes tiene abiertos y cuántos resolvió la IA. Lo resuelto también queda registrado.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M12 4v16"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Escala a cada proyecto nuevo</h3>
+          <p>Una app nueva suma el chat desde PM Tech en unos 15 minutos: se registra, recibe su clave y carga su manual. No hay que tocar el código de soporte.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <h3>Avisos automáticos</h3>
+          <p>Cada reporte que necesita a un programador avisa por email al responsable de la app y al líder de soporte, sin que nadie tenga que reenviar nada.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Seguimiento para el usuario</h3>
+          <p>En "Mis reportes", dentro del mismo chat, cada persona ve el número de su ticket, en qué estado está, quién lo tiene y para cuándo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section id="como" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Cómo lo hace</div>
+      <h2>Tres piezas que conversan entre sí</h2>
+      <p class="section-lead">El widget vive dentro de cada app; <strong>siete-soporte</strong> es el servicio con la IA, los manuales y la cola de envío; <strong>PM Tech</strong> convierte cada reporte en una tarea.</p>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-node"><div class="num">1</div><h3>La persona pide ayuda</h3><p>Abre el botón de ayuda en su app y cuenta qué pasó. No hay login extra: la app ya sabe quién es.</p></div></div>
+        <div class="flow-step"><div class="flow-node"><div class="num">2</div><h3>La app pide un pase</h3><p>El backend de la app, con su clave, pide a siete-soporte un pase de 10 minutos para esa persona.</p></div></div>
+        <div class="flow-step"><div class="flow-node"><div class="num">3</div><h3>La IA atiende</h3><p>Claude responde con el manual técnico de esa app. Si alcanza, pregunta "¿Se resolvió?". Si no, propone un reporte.</p></div></div>
+        <div class="flow-step"><div class="flow-node"><div class="num">4</div><h3>PM Tech lo organiza</h3><p>El reporte entra como tarea en el proyecto de soporte de la app, con responsable, plazo y aviso por email.</p></div></div>
+      </div>
+      <div class="outcomes">
+        <div class="outcome ai">
+          <h3>✓ Lo resolvió la IA</h3>
+          <p>Entra igual a PM Tech, como tarea ya hecha y sin avisos, para que el tablero muestre también lo que se resolvió solo.</p>
+        </div>
+        <div class="outcome dev">
+          <h3>→ Necesita a un programador</h3>
+          <p>La persona revisa el borrador (título, tipo y severidad) y lo envía. El vencimiento sale de la severidad, y el programador puede ajustarlo de 1 a 10 días.</p>
+          <div class="sla"><span class="u">Urgente: hoy</span><span class="h">Alta: 2 días</span><span class="m">Media: 5 días</span><span class="l">Baja: 10 días</span></div>
+        </div>
+      </div>
+      <div class="ticket"><small>Así se ve una tarea en PM Tech (se entiende sin abrirla):</small>Carla · Outply · SOP-123 — No carga la bandeja de respuestas</div>
+    </div>
+  </section>
+
+  <!-- Qué hicimos -->
+  <section id="hicimos">
+    <div class="wrap">
+      <div class="eyebrow">Qué hicimos</div>
+      <h2>Del análisis a producción en dos semanas</h2>
+      <p class="section-lead">Todo el código está en GitHub, revisado con tests, y lo que ya está en producción quedó verificado.</p>
+      <div class="timeline">
+        <div class="tl-item done">
+          <div class="tl-date">29 de septiembre</div>
+          <h3>Análisis y diseño</h3>
+          <ul>
+            <li>Relevamiento de las cuatro apps internas y de PM Tech.</li>
+            <li>Decisiones de producto: sección "Soporte apps" separada del portafolio, semáforo de severidad, plazos por severidad, líder de soporte configurable.</li>
+          </ul>
+        </div>
+        <div class="tl-item done">
+          <div class="tl-date">30 de septiembre al 5 de octubre</div>
+          <h3>Las tres piezas</h3>
+          <ul>
+            <li><strong>siete-soporte</strong>: chat con IA, manuales, registro de reportes y envío al PM con reintentos.</li>
+            <li><strong>PM Tech</strong>: la sección Soporte apps (reportes, panel por usuario), tickets SOP-n y avisos por email.</li>
+            <li>Un manual técnico por app (de 3.500 a 4.000 palabras cada uno) para que la IA sepa resolver.</li>
+            <li>El widget integrado en AISDR, Response Manager, Outply y Marketing AI.</li>
+          </ul>
+        </div>
+        <div class="tl-item done">
+          <div class="tl-date">6 de octubre</div>
+          <h3>La API de conexión</h3>
+          <ul>
+            <li>"Conectar app" en PM Tech: registra la app, crea su proyecto de soporte vinculado al proyecto de la app y entrega una clave propia.</li>
+            <li>Si falta el manual técnico, el asistente lo pide con la estructura que necesita la IA y no avanza sin él.</li>
+            <li>Un tour de activación con el código listo para copiar, que marca la app como "Conectada" sola.</li>
+          </ul>
+        </div>
+        <div class="tl-item done">
+          <div class="tl-date">14 de octubre</div>
+          <h3>Despliegue y entrega</h3>
+          <ul>
+            <li>siete-soporte y la nueva versión de PM Tech, en producción y verificados.</li>
+            <li>Marketing AI conectada: el chat ya está en uso, con César Granda como líder de soporte.</li>
+            <li>Primera prueba de punta a punta: el reporte entró como SOP-1, con responsable y plazo, salieron los emails y el chat lo mostró resuelto.</li>
+            <li>Los reportes ya no se pierden aunque falte una clave: esperan en cola.</li>
+            <li>Documentación de entrega y esta página.</li>
+          </ul>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">Próximo paso</div>
+          <h3>Activación</h3>
+          <ul>
+            <li>Cargar la clave de Anthropic para que la IA resuelva con el manual, y sumar las otras apps cuando corresponda. Ver <a href="#entrega">Entrega</a>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tecnología -->
+  <section id="tecnologia" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Tecnologías</div>
+      <h2>Herramientas conocidas, sin piezas exóticas</h2>
+      <p class="section-lead">Se usó el mismo stack que ya tienen las apps de Siete, para que cualquier persona del equipo pueda mantenerlo.</p>
+      <div class="grid g2">
+        <div class="card tech-group">
+          <h3>siete-soporte (el servicio del chat)</h3>
+          <div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">PostgreSQL 16</span><span class="chip">SQLAlchemy 2</span><span class="chip">Alembic</span><span class="chip">JWT (pases de 10 min)</span><span class="chip">httpx</span></div>
+        </div>
+        <div class="card tech-group">
+          <h3>Inteligencia artificial</h3>
+          <div class="chips"><span class="chip">Claude (Anthropic)</span><span class="chip">Claude Sonnet 5.5 · esfuerzo bajo</span><span class="chip">Manual técnico por app</span><span class="chip">Prompt cacheado por app</span></div>
+        </div>
+        <div class="card tech-group">
+          <h3>PM Tech (donde llegan los reportes)</h3>
+          <div class="chips"><span class="chip">FastAPI</span><span class="chip">PostgreSQL</span><span class="chip">Celery + Redis</span><span class="chip">React 19</span><span class="chip">Vite</span><span class="chip">TypeScript</span><span class="chip">TanStack Query</span><span class="chip">Tailwind CSS</span><span class="chip">Firebase Auth</span></div>
+        </div>
+        <div class="card tech-group">
+          <h3>Widget e integración en las apps</h3>
+          <div class="chips"><span class="chip">JavaScript sin dependencias</span><span class="chip">Subresource Integrity (SRI)</span><span class="chip">Next.js</span><span class="chip">FastAPI</span><span class="chip">Express</span></div>
+        </div>
+        <div class="card tech-group">
+          <h3>Calidad</h3>
+          <div class="chips"><span class="chip">pytest</span><span class="chip">Playwright</span><span class="chip">Vitest</span><span class="chip">MSW</span><span class="chip">ruff</span><span class="chip">mypy</span><span class="chip">GitHub Actions</span></div>
+        </div>
+        <div class="card tech-group">
+          <h3>Infraestructura</h3>
+          <div class="chips"><span class="chip">Docker Compose</span><span class="chip">Coolify</span><span class="chip">HTTPS en cada servicio</span><span class="chip">Despliegue desde GitHub</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buenas prácticas -->
+  <section id="practicas">
+    <div class="wrap">
+      <div class="eyebrow">Buenas prácticas de la herramienta</div>
+      <h2>Seguro por diseño, simple de operar</h2>
+      <div class="grid g3">
+        <div class="card"><h3>Las claves no salen del servidor</h3><p>Cada app tiene su propia clave y la guarda en su backend. siete-soporte sólo guarda una huella (hash) de ella. El navegador nunca ve ninguna clave.</p></div>
+        <div class="card"><h3>Una clave por app</h3><p>Cada app se conecta, rota su clave o se apaga por separado. Si una clave se filtra, se rota en un clic sin afectar a las demás.</p></div>
+        <div class="card"><h3>Pases cortos</h3><p>El widget usa un pase que dura 10 minutos y está atado a la persona y a su app. La app de un reporte sale del pase, nunca de lo que mande el navegador.</p></div>
+        <div class="card"><h3>Widget congelado</h3><p>Cada versión del widget se publica una vez y nunca se edita; las apps la cargan con su huella (SRI). Si el servidor se viera comprometido, el navegador no corre otro script.</p></div>
+        <div class="card"><h3>Sólo dominios autorizados</h3><p>El chat carga únicamente desde los dominios que se registran al conectar cada app.</p></div>
+        <div class="card"><h3>La variable de entorno es el interruptor</h3><p>Sin su clave, una app no muestra el botón. Se puede desplegar el código antes de activarlo, sin que nadie vea un chat que falla.</p></div>
+        <div class="card"><h3>Nada se pierde</h3><p>Cada reporte se guarda antes de enviarse y se reintenta solo si PM Tech no contesta. El envío es idempotente: un reintento nunca crea una tarea duplicada.</p></div>
+        <div class="card"><h3>Funciona aun sin IA</h3><p>Sin saldo, sin red o con la API caída, el chat arma el reporte con las palabras de la persona y lo envía igual.</p></div>
+        <div class="card"><h3>Permisos mínimos</h3><p>La base de datos impide que la aplicación fabrique claves o mapeos: eso sólo se hace desde la consola de administración.</p></div>
+        <div class="card"><h3>Manuales con estructura</h3><p>Cada manual sigue la misma estructura (pantallas, errores, qué no puede resolver el usuario, glosario), con un mínimo de contenido y sin secretos.</p></div>
+        <div class="card"><h3>Probado antes de mergear</h3><p>Tests automáticos en cada pieza, pruebas del widget en navegador y CI en GitHub. Cada cambio pasó por un PR revisado.</p></div>
+        <div class="card"><h3>Configurable sin deploy</h3><p>Los líderes de soporte son una lista editable: hoy es una persona y mañana pueden ser otras, sin tocar código.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué pronto -->
+  <section id="pronto" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">La importancia de implementarlo pronto</div>
+      <h2>Ya está encendido: falta sumar el resto</h2>
+      <p class="section-lead">El trabajo grande ya está hecho, verificado y en uso en Marketing AI. Cada semana sin sumar las demás apps es una semana más de reportes perdidos y consultas repetidas en ellas.</p>
+      <div class="why">
+        <div class="card"><b>1 clave</b><p>separa al equipo de que la IA resuelva sola con el manual: la de Anthropic. Las otras apps tienen sus cambios listos.</p></div>
+        <div class="card"><b>0</b><p>reportes perdidos desde el día uno: lo que hoy se diluye en chats pasa a tener número, dueño y plazo.</p></div>
+        <div class="card"><b>Bajo costo</b><p>un modelo eficiente, con esfuerzo bajo y el manual en caché. Cada consulta que resuelve la IA es una interrupción menos para desarrollo.</p></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3>El código envejece si no se usa</h3><p>Las apps siguen cambiando. Cuanto antes se active, menos riesgo de que las ramas listas (Response Manager, AISDR, Outply) queden atrás de sus apps.</p></div>
+        <div class="card"><h3>Los datos empiezan a contar desde que se enciende</h3><p>El panel por usuario y el historial de lo que resolvió la IA sólo existen a partir del primer reporte. Son la base para priorizar mejoras en cada app.</p></div>
+      </div>
+      <div class="callout">
+        <p><strong>La activación es una lista corta de pasos, en orden.</strong> Está abajo, con casillas para ir marcando.</p>
+        <a class="btn" href="#entrega">Ir al checklist</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Onboarding -->
+  <section id="onboarding">
+    <div class="wrap">
+      <div class="eyebrow">Onboarding</div>
+      <h2>Cómo se usa, según tu rol</h2>
+      <p class="section-lead">Cada rol entra por un solo lugar: el usuario por el botón de ayuda de su app y el equipo por PM Tech → Soporte apps.</p>
+      <div class="tabs" role="tablist" aria-label="Roles">
+        <button class="tab" role="tab" id="t-usuario" aria-controls="p-usuario" aria-selected="true">Usuario de una app</button>
+        <button class="tab" role="tab" id="t-dev" aria-controls="p-dev" aria-selected="false" tabindex="-1">Programador</button>
+        <button class="tab" role="tab" id="t-lider" aria-controls="p-lider" aria-selected="false" tabindex="-1">Líder de soporte</button>
+        <button class="tab" role="tab" id="t-admin" aria-controls="p-admin" aria-selected="false" tabindex="-1">Admin de PM Tech</button>
+      </div>
+
+      <div class="panel card" role="tabpanel" id="p-usuario" aria-labelledby="t-usuario">
+        <div class="role">
+          <div class="role-where"><strong>Dónde</strong>El botón de ayuda, abajo a la derecha de tu app (en Response Manager, abajo a la izquierda). SDRs, admins de agencia, marketing.</div>
+          <ol class="steps">
+            <li>Abre el botón y cuenta qué pasó<span>Con tus palabras. Si ayuda, en qué pantalla estabas.</span></li>
+            <li>Lee la respuesta de la IA<span>Si el manual alcanza, te explica cómo resolverlo y pregunta "¿Se resolvió?".</span></li>
+            <li>Si no se resolvió, revisa el reporte<span>La IA arma un borrador con título, tipo y severidad. Ajústalo si hace falta y envíalo.</span></li>
+            <li>Síguelo en "Mis reportes"<span>Ves el número (SOP-n), en qué estado está, quién lo tiene y para cuándo.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel card" role="tabpanel" id="p-dev" aria-labelledby="t-dev" hidden>
+        <div class="role">
+          <div class="role-where"><strong>Dónde</strong>El email del aviso, Mis tareas, Vencimientos y Soporte apps en PM Tech. Cada reporte va al responsable del proyecto de soporte de su app.</div>
+          <ol class="steps">
+            <li>Abre la tarea<span>El título ya dice quién, qué app y qué número: "Carla · Outply · SOP-123 — …".</span></li>
+            <li>Lee la ficha<span>Pantalla, adjuntos y el link a la conversación con la IA.</span></li>
+            <li>Corrige si hace falta<span>Severidad o tipo, y el plazo (de 1 a 10 días; un urgente vence hoy).</span></li>
+            <li>Muévela por el tablero<span>Como cualquier otra tarea. El usuario ve el cambio de estado en "Mis reportes".</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel card" role="tabpanel" id="p-lider" aria-labelledby="t-lider" hidden>
+        <div class="role">
+          <div class="role-where"><strong>Dónde</strong>El email del aviso y PM Tech → Soporte apps. Hoy el líder de soporte es César Granda; la lista se puede cambiar.</div>
+          <ol class="steps">
+            <li>Recibe copia de cada reporte<span>Cada reporte que necesita a un programador te llega por email.</span></li>
+            <li>Mira la vista "Por usuario"<span>Quién reporta, cuántos reportes tiene abiertos y cuántos resolvió la IA.</span></li>
+            <li>Reasigna o prioriza<span>Si algo está trabado o mal asignado, se cambia desde la tarea.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel card" role="tabpanel" id="p-admin" aria-labelledby="t-admin" hidden>
+        <div class="role">
+          <div class="role-where"><strong>Dónde</strong>PM Tech → Soporte apps → Apps. Sólo administradores.</div>
+          <ol class="steps">
+            <li>Conectar apps nuevas<span>"Conectar app": nombre, identificador, dominios y el proyecto de la app en el PM.</span></li>
+            <li>Rotar claves<span>"Rotar clave" da una nueva y corta la anterior enseguida.</span></li>
+            <li>Mantener los manuales<span>"Actualizar manual" cada vez que una app cambia pantallas o mensajes de error.</span></li>
+            <li>Elegir los líderes de soporte<span>Desde la barra de arriba de Soporte apps.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px;font-size:1.3rem">Sumar el chat a una app nueva</h3>
+      <p class="section-lead" style="margin-top:6px">Cualquier proyecto nuevo de la empresa suma el chat en unos 15 minutos, todo desde PM Tech.</p>
+      <div class="grid g3">
+        <div class="card"><div class="icon">1</div><h3>Registrar la app</h3><p>En PM Tech → Soporte apps → Apps → <strong>Conectar app</strong>: nombre, identificador, dominios y el proyecto de la app. Se crea "Soporte - &lt;App&gt;", vinculado a ese proyecto.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Guardar la clave</h3><p>La clave se muestra una sola vez. Va en las variables de entorno del <strong>backend</strong> de la app: <code>SIETE_SOPORTE_KEY</code> (y <code>SIETE_SOPORTE_URL</code> si hace falta). Nunca en el navegador ni en el repo.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Cargar el manual</h3><p>Si no existe, el asistente lo pide: título y cuatro secciones (pantallas, errores, qué no puede resolver el usuario, glosario). Se puede partir de la plantilla o subir un <code>.md</code>.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Pegar el código del tour</h3><p>Una ruta del backend que pide el pase para la persona logueada (ejemplos en FastAPI, Next.js y Express) y el script del widget con su huella.</p></div>
+        <div class="card"><div class="icon">5</div><h3>Desplegar</h3><p>Con la primera persona que abre el chat, la app aparece como <strong>Conectada</strong> y sus reportes empiezan a entrar al tablero.</p></div>
+        <div class="card"><div class="icon">?</div><h3>¿Y si se pierde la clave?</h3><p>"Rotar clave" da otra y corta la anterior. Se pega la nueva en el backend de la app y se redespliega.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Entrega -->
+  <section id="entrega" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Entrega · estado al 14/10/2026</div>
+      <h2>Dónde está cada pieza</h2>
+      <div class="status-list">
+        <div class="status-row"><div><h3>siete-soporte</h3><p>Desplegado, conectado a PM Tech y en uso. Falta la clave de Anthropic para que responda la IA; mientras tanto, todo se convierte en reporte.</p></div><span class="badge ok">En producción</span></div>
+        <div class="status-row"><div><h3>PM Tech · Soporte apps</h3><p>En producción con Conectar app, tickets SOP-n, avisos por email y el panel por usuario.</p></div><span class="badge ok">En producción</span></div>
+        <div class="status-row"><div><h3>Marketing AI</h3><p>Conectada: el chat está en uso y la primera prueba de punta a punta salió bien (SOP-1).</p></div><span class="badge ok">En uso</span></div>
+        <div class="status-row"><div><h3>Response Manager (con UniBox)</h3><p>Cambios listos. Esperan el visto bueno de quien lleva la verificación de Google (CASA), porque la app lee Gmail.</p></div><span class="badge wait">Espera aprobación</span></div>
+        <div class="status-row"><div><h3>AISDR y Outply</h3><p>Cambios listos en sus ramas, a la espera de la decisión de sus responsables.</p></div><span class="badge off">Pendiente de decisión</span></div>
+        <div class="status-row"><div><h3>Manuales técnicos de las 4 apps</h3><p>Escritos. Se cargan al conectar cada app; el de Marketing AI ya está cargado.</p></div><span class="badge ok">Listos</span></div>
+      </div>
+
+      <h2 style="margin-top:56px">Checklist para terminar</h2>
+      <p class="section-lead">Los pasos que quedan los hace una persona con acceso de administración (DNS, despliegues y PM Tech). Las casillas quedan guardadas en este navegador. El detalle exacto de cada paso está en la documentación interna.</p>
+      <div class="progress"><div class="bar"><i id="bar"></i></div><b id="count">0 de 7</b></div>
+      <ul class="checklist" id="checklist">
+        <li class="check"><input type="checkbox" id="c1"><label for="c1"><h3>1. Devolverle su dirección a siete-soporte <span class="who">hecho el 14/10</span></h3><p>Se creó el registro de <code>soporte.wearesiete.com</code> en el DNS de la empresa, apuntando al mismo servidor que las demás apps, y <code>/health</code> responde.</p></label></li>
+        <li class="check"><input type="checkbox" id="c2"><label for="c2"><h3>2. Conectar PM Tech con siete-soporte <span class="who">hecho el 14/10</span></h3><p>Copiar la clave de administración de siete-soporte en la configuración de PM Tech y redesplegar. Con eso se habilita "Conectar app".</p></label></li>
+        <li class="check"><input type="checkbox" id="c3"><label for="c3"><h3>3. Darle a siete-soporte su clave del PM <span class="who">hecho el 14/10</span></h3><p>Generar la clave desde la consola de PM Tech (se muestra una vez), pegarla en siete-soporte y redesplegar. Hasta entonces los reportes esperan en cola, sin perderse.</p></label></li>
+        <li class="check"><input type="checkbox" id="c4"><label for="c4"><h3>4. Activar la IA <span class="who">cuando haya saldo</span></h3><p>Cargar la clave de Anthropic en siete-soporte. Mientras tanto el chat funciona sin asistente: todo se convierte en reporte.</p></label></li>
+        <li class="check"><input type="checkbox" id="c5"><label for="c5"><h3>5. Conectar Marketing AI <span class="who">hecho el 14/10</span></h3><p>Conectar app con el identificador <code>marketing-ai</code>, pegar su clave en el backend de Marketing AI, subir su manual y redesplegar.</p></label></li>
+        <li class="check"><input type="checkbox" id="c6"><label for="c6"><h3>6. Líder de soporte y prueba de punta a punta <span class="who">hecho el 14/10</span></h3><p>Elegir a César Granda como líder en Soporte apps. Hacer un reporte de prueba desde Marketing AI: tiene que aparecer como SOP-1, con responsable y plazo, y llegar el email.</p></label></li>
+        <li class="check"><input type="checkbox" id="c7"><label for="c7"><h3>7. Las otras tres apps <span class="who">cuando corresponda</span></h3><p>Response Manager con el visto bueno de CASA; AISDR y Outply cuando sus responsables lo aprueben. Mismo procedimiento que el paso 5.</p></label></li>
+      </ul>
+
+      <h2 style="margin-top:56px">Preguntas frecuentes</h2>
+      <div style="margin-top:24px">
+        <details><summary>¿Qué pasa si la IA no está disponible?</summary><p>El chat sigue funcionando: arma el reporte con las palabras de la persona y lo envía a PM Tech. Nada se pierde.</p></details>
+        <details><summary>¿Qué pasa si PM Tech no responde o una clave está mal?</summary><p>El reporte queda guardado en siete-soporte y se reintenta solo (cada vez con más espera, hasta una hora). Sale apenas se corrige el problema.</p></details>
+        <details><summary>¿Cómo apago el chat en una app?</summary><p>Se borra su clave del backend de esa app y se redespliega: el botón desaparece. No hace falta tocar siete-soporte ni PM Tech.</p></details>
+        <details><summary>¿Por qué Academy no tiene el chat?</summary><p>Sus usuarios son externos a la empresa. Necesitan otro estilo de ayuda, así que quedó afuera a propósito.</p></details>
+        <details><summary>¿Cada cuánto hay que actualizar un manual?</summary><p>Cada vez que la app cambia pantallas o mensajes de error. Es lo que la IA lee para responder: un manual al día es una IA que resuelve más.</p></details>
+        <details><summary>¿Quién recibe los avisos?</summary><p>El responsable del proyecto de soporte de la app y los líderes de soporte. Lo que resolvió la IA no genera avisos.</p></details>
+        <details><summary>¿Se pueden sumar más líderes de soporte?</summary><p>Sí. Es una lista editable por un administrador en Soporte apps, sin despliegues.</p></details>
+      </div>
+
+      <h2 style="margin-top:56px">Dónde está todo</h2>
+      <div class="links">
+        <div class="card"><h3>Código</h3><p>Repositorios privados de Siete en GitHub: <code>siete-soporte</code> (servicio, widget y manuales) y <code>project-manager-tech</code> (Soporte apps). Cada app tiene su rama del widget.</p></div>
+        <div class="card"><h3>Documentación interna</h3><p>El documento "AI Support Sync" (para el equipo) tiene el detalle de cada paso, la operación y qué hacer si algo falla. En el repo: el handoff, la guía de integración y los hallazgos.</p></div>
+        <div class="card"><h3>En PM Tech</h3><p>El proyecto "AI Support Sync" tiene la tarea "Terminar la implementación" con este mismo checklist. Los reportes viven en Soporte apps.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>AI Support Sync · Área de Tecnología de Siete · entrega del 14 de octubre de 2026</span>
+    <span>Preparado por Ily Rivas con Claude Code</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function write(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+
+  // Tema
+  var root = document.documentElement;
+  var saved = read("ass-theme");
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  document.getElementById("theme").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme")
+      ? root.getAttribute("data-theme") === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    write("ass-theme", next);
+  });
+
+  // Pestañas de roles
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () { select(tab); });
+    tab.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      var next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      select(next);
+      next.focus();
+    });
+  });
+
+  // Checklist (se guarda sólo en este navegador)
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checklist input"));
+  var state = {};
+  try { state = JSON.parse(read("ass-checklist") || "{}") || {}; } catch (e) { state = {}; }
+  function paint() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    document.getElementById("bar").style.width = (done / boxes.length * 100) + "%";
+    document.getElementById("count").textContent = done + " de " + boxes.length;
+  }
+  boxes.forEach(function (b) {
+    b.checked = !!state[b.id];
+    b.addEventListener("change", function () {
+      state[b.id] = b.checked;
+      write("ass-checklist", JSON.stringify(state));
+      paint();
+    });
+  });
+  paint();
+})();
+</script>
+</body>
+</html>
