@@ -392,7 +392,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <div class="stat"><b>4</b><span>apps internas con la integración lista</span></div>
         <div class="stat"><b>1</b><span>lugar para ver todos los reportes: PM Tech</span></div>
         <div class="stat"><b>~15 min</b><span>para sumar el chat a una app nueva</span></div>
-        <div class="stat"><b>49</b><span>hallazgos documentados en el camino</span></div>
+        <div class="stat"><b>52</b><span>hallazgos documentados en el camino</span></div>
       </div>
     </div>
   </div>
@@ -569,7 +569,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <ul>
             <li>El <a href="manual.html">manual</a> para quien queda a cargo, publicado junto a esta página.</li>
             <li>La cara de Siete, en producción en Marketing AI; PM Tech ya entrega el widget v3 al conectar una app.</li>
-            <li>Outply, conectada y con su clave: su cambio sale después de las 17:00 (Lima), el horario en que se despliega.</li>
+            <li>Outply, en uso desde las 20:32 (Lima), dentro de su horario de despliegue: muestra la cara de Siete y tiene su manual, puesto al día con lo que cambió la app desde el 05/10.</li>
             <li>AISDR, con su cambio publicado; se conecta cuando se decida su proyecto y su responsable.</li>
           </ul>
         </div>
@@ -577,7 +577,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <div class="tl-date">Lo que sigue</div>
           <h3>Activación completa</h3>
           <ul>
-            <li>Cargar la clave de Anthropic, terminar Outply y conectar AISDR. Ver <a href="#entrega">Entrega</a>.</li>
+            <li>Cargar la clave de Anthropic y conectar AISDR. Ver <a href="#entrega">Entrega</a>.</li>
           </ul>
         </div>
       </div>
@@ -653,7 +653,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <div class="card"><b>Bajo costo</b><p>un modelo eficiente, con esfuerzo bajo y el manual en caché. Cada consulta que resuelve la IA es una interrupción menos para desarrollo.</p></div>
       </div>
       <div class="grid g2">
-        <div class="card"><h3>El código envejece si no se usa</h3><p>Las apps siguen cambiando. Cuanto antes se active, menos riesgo de que las ramas listas (Response Manager, AISDR, Outply) queden atrás de sus apps.</p></div>
+        <div class="card"><h3>El código envejece si no se usa</h3><p>Las apps siguen cambiando. Cuanto antes se active, menos riesgo de que la rama que espera (Response Manager) y los manuales queden atrás de sus apps.</p></div>
         <div class="card"><h3>Los datos empiezan a contar desde que se enciende</h3><p>El panel por usuario y el historial de lo que resolvió la IA sólo existen a partir del primer reporte. Son la base para priorizar mejoras en cada app.</p></div>
       </div>
       <div class="callout">
@@ -746,9 +746,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <div class="status-row"><div><h3>PM Tech · Soporte apps</h3><p>En producción con Conectar app, tickets SOP-n, avisos por email y el panel por usuario. Desde el 15/10 entrega el widget v3 al conectar una app.</p></div><span class="badge ok">En producción</span></div>
         <div class="status-row"><div><h3>Marketing AI</h3><p>Conectada: el chat está en uso y la primera prueba de punta a punta salió bien (SOP-1). Sus reportes le llegan a Jaime. Desde el 15/10 muestra la cara de Siete.</p></div><span class="badge ok">En uso</span></div>
         <div class="status-row"><div><h3>Response Manager (con UniBox)</h3><p>Cambios listos, ya con el widget v3. Esperan el visto bueno de quien lleva la verificación de Google (CASA), porque la app lee Gmail.</p></div><span class="badge wait">Espera aprobación</span></div>
-        <div class="status-row"><div><h3>Outply</h3><p>Conectada en PM Tech el 15/10 y con su clave cargada; sus reportes le llegan a Jaime. Su cambio se publica después de las 17:00 (Lima), el horario en que se despliega Outply.</p></div><span class="badge wait">Conectándose</span></div>
+        <div class="status-row"><div><h3>Outply</h3><p>Conectada y en uso desde el 15/10: muestra la cara de Siete, su manual está cargado y sus reportes le llegan a Jaime.</p></div><span class="badge ok">En uso</span></div>
         <div class="status-row"><div><h3>AISDR</h3><p>Su cambio ya está publicado y no se ve hasta conectarla. Falta decidir a qué proyecto de PM Tech se vincula y quién recibe sus reportes.</p></div><span class="badge off">Pendiente de decisión</span></div>
-        <div class="status-row"><div><h3>Manuales técnicos de las 4 apps</h3><p>Escritos. Se cargan al conectar cada app; el de Marketing AI ya está cargado.</p></div><span class="badge ok">Listos</span></div>
+        <div class="status-row"><div><h3>Manuales técnicos de las 4 apps</h3><p>Escritos. Se cargan al conectar cada app; los de Marketing AI y Outply ya están cargados. Los de AISDR y Response Manager son del 05/10: revisarlos antes de cargarlos.</p></div><span class="badge ok">Listos</span></div>
       </div>
 
       <h2 style="margin-top:56px">Checklist para terminar</h2>
@@ -761,7 +761,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <li class="check"><input type="checkbox" id="c4"><label for="c4"><h3>4. Activar la IA <span class="who">15/10</span></h3><p>Cargar la clave de Anthropic en siete-soporte. Mientras tanto el chat funciona sin asistente: todo se convierte en reporte.</p></label></li>
         <li class="check"><input type="checkbox" id="c5"><label for="c5"><h3>5. Conectar Marketing AI <span class="who">hecho el 14/10</span></h3><p>Conectar app con el identificador <code>marketing-ai</code>, pegar su clave en el backend de Marketing AI, subir su manual y redesplegar.</p></label></li>
         <li class="check"><input type="checkbox" id="c6"><label for="c6"><h3>6. Líder de soporte y prueba de punta a punta <span class="who">hecho el 14/10</span></h3><p>Elegir a César Granda como líder en Soporte apps. Hacer un reporte de prueba desde Marketing AI: tiene que aparecer como SOP-1, con responsable y plazo, y llegar el email.</p></label></li>
-        <li class="check"><input type="checkbox" id="c7"><label for="c7"><h3>7. Las otras tres apps <span class="who">Outply 15/10 · AISDR y RM, a decidir</span></h3><p>Outply: conectada y con su clave; falta publicar su cambio (después de las 17:00, Lima) y subir su manual. AISDR: decidir su proyecto y su responsable, y conectarla igual. Response Manager, con el visto bueno de CASA. El paso a paso está en el <a href="manual.html#conectar">manual</a>.</p></label></li>
+        <li class="check"><input type="checkbox" id="c7"><label for="c7"><h3>7. Las otras tres apps <span class="who">Outply, hecho el 15/10 · AISDR y RM, a decidir</span></h3><p>Outply: hecho (conectada, publicada y con su manual). AISDR: decidir su proyecto y su responsable, y conectarla igual. Response Manager, con el visto bueno de CASA. El paso a paso está en el <a href="manual.html#conectar">manual</a>.</p></label></li>
       </ul>
 
       <h2 style="margin-top:56px">Preguntas frecuentes</h2>
